@@ -56,19 +56,20 @@ export default {
         }
       }).then(successResponse => {
           this.responseResult = JSON.stringify(successResponse.data)
-          if (successResponse.data.code === 200) {
-            this.$router.replace({path: '/index'})
-          }
+          // if (successResponse.data.code === 200) {
+          this.$router.replace({path: '/index'})
+          // }
         })
         .catch(failResponse => {
           console.log("a")
         })
 
-      axios.get('/api/v1/tour').then(function (response) {
-      　　alert(''.concat(response.data, '\r\n', response.status, '\r\n', response.statusText, '\r\n', response.headers, '\r\n', response.config));
-      }).catch(function (error) {
-      　　alert(error);
-      });
+      // axios.get('/api/v1/tour').then(function (response) {
+      // 　　alert(''.concat(response.data, '\r\n', response.status, '\r\n', response.statusText, '\r\n', response.headers, '\r\n', response.config));
+      // }).catch(function (error) {
+      // 　　alert(error);
+      // });
+
       // axios
       //   .post('/api/login', 
       //   {

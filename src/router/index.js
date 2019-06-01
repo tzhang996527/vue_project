@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import BlogLogin from '@/components/BlogLogin.vue'
-import BlogIndex from '@/components/BlogIndex.vue'
+import HomeIndex from '@/components/home/HomeIndex.vue'
 
 Vue.use(Router)
 
@@ -13,8 +13,8 @@ export default new Router({
     },
     {
       path: '/index',
-      name: 'BlogIndex',
-      component: BlogIndex
+      name: 'HomeIndex',
+      component: HomeIndex
     },
     {
       path: '/manage',
