@@ -52,6 +52,21 @@ export default {
         handleSubmit(event){
             // this.$refs.ruleForm2.validate((valid) => {
 
+                this.logining = true;
+                if(this.ruleForm2.username === 'Admin' && 
+                    this.ruleForm2.password === 'Admin'){
+                        this.logining = false;
+                        sessionStorage.setItem('user', this.ruleForm2.username);
+                        this.$router.push({path: '/dashboard'});
+                }else{
+                    this.logining = false;
+                    this.$alert('username or password wrong!', 'info', {
+                        confirmButtonText: 'ok'
+                    })
+                }
+
+                return
+                
                 var axios = require('axios')
                 axios.defaults.baseURL = process.env.API
 

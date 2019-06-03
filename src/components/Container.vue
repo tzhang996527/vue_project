@@ -5,7 +5,7 @@
         class="app-side app-side-left"
         :class="isCollapse ? 'app-side-collapsed' : 'app-side-expanded'"
       >
-        <div class="app-side-logo" background-color="#545c64">
+        <div class="app-side-logo">
           <img src="@/assets/logo.png" :width="isCollapse ? '60' : '60'" height="60">
         </div>
         <div>
@@ -71,6 +71,7 @@
             mode="horizontal"
             @select="handleSelect"
             active-text-color="#409EFF"
+            background-color="#545c64"
           >
             <el-menu-item index="/">首页</el-menu-item>
           </el-menu>

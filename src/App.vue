@@ -11,6 +11,12 @@ export default {
 </script>
 
 <style>
+.app-header{
+  background-color:#545c64
+}
+.zcontainer{
+  background-color:#545c64
+}
 /* #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
