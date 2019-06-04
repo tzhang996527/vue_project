@@ -4,16 +4,78 @@
   width: 500px;
   height: 500px;
 }
+.content-window-card {
+    position: relative;
+    box-shadow: none;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    padding: 0;
+}
+.content-window-card p {
+    height: 2rem;
+}
+.custom-info {
+    border: solid 1px rgb(224, 27, 27);
+}
+.info-top {
+    position: relative;
+    background: none repeat scroll 0 0 rgb(69, 24, 153);
+    border-bottom: 1px solid rgb(204, 204, 204);
+    border-radius: 5px 5px 0 0;
+}
+.info-top div {
+    display: inline-block;
+    color: #333333;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 31px;
+    padding: 0 10px;
+}
+.info-top img {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transition-duration: 0.25s;
+}
+.info-top img:hover {
+    box-shadow: 0px 0px 5px #000;
+}
+.info-middle {
+    font-size: 12px;
+    padding: 10px 6px;
+    line-height: 20px;
+}
+.info-bottom {
+    height: 0px;
+    width: 100%;
+    clear: both;
+    text-align: center;
+}
+.info-bottom img {
+    position: relative;
+    z-index: 104;
+}
+span {
+    margin-left: 5px;
+    font-size: 11px;
+}
+.info-middle img {
+    float: left;
+    margin-right: 6px;
+}
 </style>
 
 <template>
   <div>
-    <div id="container-map" style="width:1000px; height:500px"></div>
+    <div id="container-map" style="width:100%; height:500px"></div>
     <button @click="addTool">加载</button>
+    <button @click="addTraffic">交通</button>
     <button @click="addPos">画点</button>
     <button @click="thisLocation">定位</button>
     <button @click="cancelLocation">取消圆</button>
     <button @click="getMaker">获取覆盖物信息</button>
+    <button @click="drawLine">路径</button>
     <input type="text" id="input_id">
     <span>{{chosePosition}}</span>
     <span>圆的长度{{myCircle.radius}}</span>
@@ -32,6 +94,7 @@
 
 import AMap from "AMap";
 import AMapUI from "AMapUI";
+import * as util from '../utils/util'
 
 export default {
   name: "map",
@@ -61,11 +124,72 @@ export default {
       /* 拖拽对象 */
       positionPickerObj: {},
       /* 当前城市编码 */
-      citycode: "020"
+      citycode: "020",
+
+      isVisible: true,
+      trafficLayer: {}
     };
   },
 
   methods: {
+    drawLine() {
+      
+      // 121.54449,31.218761
+      // 121.546335,31.217697
+      // 121.543932,31.215678
+      // 121.541615,31.212228
+      // dest
+      // 121.539683,31.206833
+      // 折线的节点坐标数组，每个元素为 AMap.LngLat 对象
+      var path = [
+        [121.54449, 31.218761],
+        [121.546335, 31.217697],
+        [121.543932, 31.215678],
+        [121.541615, 31.212228],
+        [121.539683, 31.206833]
+      ];
+
+      var test = AMap.LngLat();
+      debugger;
+
+      var test2 = util.dateFormat(new Date());
+
+      var polyline = new AMap.Polyline({
+        path: path,
+        isOutline: true,
+        outlineColor: "#ffeeff",
+        borderWeight: 3,
+        strokeColor: "#3366FF",
+        strokeOpacity: 1,
+        strokeWeight: 6,
+        // 折线样式还支持 'dashed'
+        strokeStyle: "solid",
+        // strokeStyle是dashed时有效
+        strokeDasharray: [10, 5],
+        lineJoin: "round",
+        lineCap: "round",
+        zIndex: 50
+      });
+
+      polyline.setMap(this.map);
+      // 缩放地图到合适的视野级别
+      this.map.setFitView([polyline]);
+    },
+
+    addTraffic() {
+      //实时路况图层
+      // debugger
+      // trafficLayer.setMap(this.map);
+
+      if (this.isVisible) {
+        this.trafficLayer.hide();
+        this.isVisible = false;
+      } else {
+        this.trafficLayer.show();
+        this.isVisible = true;
+      }
+    },
+
     /* 添加工具条 */
     addTool() {
       AMap.plugin(["AMap.ToolBar", "AMap.Driving"], () => {
@@ -75,9 +199,12 @@ export default {
     },
 
     addPos() {
+
+      var that = this;
+      this.map.clearMap();
       // 以 icon URL 的形式创建一个途经点
       var viaMarker = new AMap.Marker({
-        position: new AMap.LngLat(121.546335,31.217697),
+        position: new AMap.LngLat(121.546335, 31.217697),
         // 将一张图片的地址设置为 icon
         icon:
           "//a.amap.com/jsapi_demos/static/demo-center/icons/dir-via-marker.png",
@@ -100,7 +227,7 @@ export default {
 
       // 将 icon 传入 marker
       var startMarker = new AMap.Marker({
-        position: new AMap.LngLat(121.539683,31.206833),
+        position: new AMap.LngLat(121.539683, 31.206833),
         icon: startIcon,
         offset: new AMap.Pixel(-13, -30)
       });
@@ -116,15 +243,93 @@ export default {
 
       // 将 icon 传入 marker
       var endMarker = new AMap.Marker({
-        position: new AMap.LngLat(121.543932,31.215678),
+        position: new AMap.LngLat(121.543932, 31.215678),
         icon: endIcon,
         offset: new AMap.Pixel(-13, -30)
       });
 
       // 将 markers 添加到地图
       this.map.add([viaMarker, startMarker, endMarker]);
+
+      var marker = new AMap.Marker({
+        position: [121.546335, 31.217697] //位置
+      });
+
+      //实例化信息窗体
+      var title =
+        '方恒假日酒店<span style="font-size:11px;color:#F00;">价格:318</span>',content = [];
+      content.push(
+        "<img src='http://tpc.googlesyndication.com/simgad/5843493769827749134'>地址：北京市朝阳区阜通东大街6号院3号楼东北8.3公里"
+      );
+      content.push("电话：010-64733333");
+      content.push(
+        "<a href='https://ditu.amap.com/detail/B000A8URXB?citycode=110105'>详细信息</a>"
+      );
+      var infoWindow = new AMap.InfoWindow({
+        isCustom: true, //使用自定义窗体
+        content: that.$options.methods.createInfoWindow.bind(this)(title, content.join("<br/>")),
+        offset: new AMap.Pixel(16, -45)
+      });
+
+      // var infoWindow = new AMap.InfoWindow({ //创建信息窗体
+      //   isCustom: true,  //使用自定义窗体
+      //   content:'<div>信息窗体</div>', //信息窗体的内容可以是任意html片段
+      //   offset: new AMap.Pixel(16, -45)
+      // });
+
+      var map_test = this.map;
+      var onMarkerClick = function(e) {
+        infoWindow.open(map_test, e.target.getPosition()); //打开信息窗体
+        //e.target就是被点击的Marker
+      };
+
+      this.map.add(marker); //添加到地图
+      marker.on("click", onMarkerClick); //绑定click事件
     },
 
+createInfoWindow(title, content) {
+    var info = document.createElement("div");
+    info.className = "custom-info input-card content-window-card";
+
+    //可以通过下面的方式修改自定义窗体的宽高
+    //info.style.width = "400px";
+    // 定义顶部标题
+    var top = document.createElement("div");
+    var titleD = document.createElement("div");
+    var closeX = document.createElement("img");
+    top.className = "info-top";
+    titleD.innerHTML = title;
+    closeX.src = "https://webapi.amap.com/images/close2.gif";
+    closeX.onclick = this.$options.methods.closeInfoWindow.bind(this);
+
+    top.appendChild(titleD);
+    top.appendChild(closeX);
+    info.appendChild(top);
+
+    // 定义中部内容
+    var middle = document.createElement("div");
+    middle.className = "info-middle";
+    middle.style.backgroundColor = 'white';
+    middle.innerHTML = content;
+    info.appendChild(middle);
+
+    // 定义底部内容
+    var bottom = document.createElement("div");
+    bottom.className = "info-bottom";
+    bottom.style.position = 'relative';
+    bottom.style.top = '0px';
+    bottom.style.margin = '0 auto';
+    var sharp = document.createElement("img");
+    sharp.src = "https://webapi.amap.com/images/sharp.png";
+    bottom.appendChild(sharp);
+    info.appendChild(bottom);
+    return info;
+},
+
+//关闭信息窗体
+closeInfoWindow() {
+    this.map.clearInfoWindow();
+},
     /* 定位具体位置 */
     thisLocation() {
       this.map.plugin("AMap.Geolocation", () => {
@@ -166,35 +371,7 @@ export default {
 
     /* 画图 */
     addCircle() {
-      this.myCircle = {
-        center: [this.chosePosition.lng, this.chosePosition.lat], // 圆心位置
-        radius: 300, // 半径
-        strokeColor: "#FFFF00", // 线颜色
-        strokeOpacity: 0.2, // 线透明度
-        strokeWeight: 1, // 线粗细度
-        fillColor: "#222222", // 填充颜色
-        fillOpacity: 0.2 // 填充透明度
-      };
 
-      this.circle = new AMap.Circle(this.myCircle);
-      this.circle.setMap(this.map);
-      // 引入多边形编辑器插件
-      this.map.plugin(["AMap.CircleEditor"], () => {
-        // 实例化多边形编辑器，传入地图实例和要进行编辑的多边形实例
-        this.circleEditor = new AMap.CircleEditor(this.map, this.circle);
-        // 开启编辑模式
-        this.circleEditor.open();
-        this.myCircle.radius = this.circle.Mg.radius;
-        this.circleEditor.on("adjust", data => {
-          this.myCircle.radius = data.radius;
-        });
-
-        this.circleEditor.on("move", data => {
-          console.log("移动");
-          this.chosePosition.lng = data.lnglat.lng;
-          this.chosePosition.lat = data.lnglat.lat;
-        });
-      });
     },
 
     /* 取消圆 */
@@ -300,7 +477,6 @@ export default {
   },
 
   activated() {},
-
   // souruce
   // 121.54449,31.218761
   // 121.546335,31.217697
@@ -317,6 +493,11 @@ export default {
       center: [121.54449, 31.218761],
       zooms: [4, 18]
     });
+
+    this.trafficLayer = new AMap.TileLayer.Traffic({
+      zIndex: 10
+    });
+    this.map.add(this.trafficLayer); //添加图层到地图
 
     /* 添加工具条 */
     this.addTool();
