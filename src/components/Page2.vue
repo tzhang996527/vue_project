@@ -76,14 +76,18 @@ span {
     <button @click="cancelLocation">取消圆</button>
     <button @click="getMaker">获取覆盖物信息</button>
     <button @click="drawLine">路径</button>
+    <button @click="truckRoute">卡车</button>
     <input type="text" id="input_id">
     <span>{{chosePosition}}</span>
     <span>圆的长度{{myCircle.radius}}</span>
+    <div id="panel"></div>
   </div>
 </template>
 
 
 <script>
+//地理围栏
+// https://lbs.amap.com/api/webservice/guide/api/geofence_service
 // souruce
 // 121.54449,31.218761
 // 121.546335,31.217697
@@ -132,6 +136,22 @@ export default {
   },
 
   methods: {
+    truckRoute(){
+    //构造路线导航类
+    var driving = new AMap.Driving({
+        map: this.map,
+        panel: "panel"
+    }); 
+    // 根据起终点经纬度规划驾车导航路线
+    driving.search(new AMap.LngLat(121.54449,31.218761), new AMap.LngLat(121.539683,31.206833), function(status, result) {
+        // result 即是对应的驾车导航信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_DrivingResult
+        if (status === 'complete') {
+            console.log('绘制驾车路线完成')
+        } else {
+            console.log('获取驾车数据失败：' + result)
+        }
+    });
+    },
     drawLine() {
       
       // 121.54449,31.218761
@@ -156,12 +176,13 @@ export default {
 
       var polyline = new AMap.Polyline({
         path: path,
+        showDir:true,
         isOutline: true,
         outlineColor: "#ffeeff",
         borderWeight: 3,
-        strokeColor: "#3366FF",
+        strokeColor: "#3366FF",// 线颜色
         strokeOpacity: 1,
-        strokeWeight: 6,
+        strokeWeight: 6,       // 线宽
         // 折线样式还支持 'dashed'
         strokeStyle: "solid",
         // strokeStyle是dashed时有效
