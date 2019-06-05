@@ -24,10 +24,11 @@
             <el-submenu index="1">
               <template slot="title">
                 <i class="el-icon-setting"></i>
-                <span>车辆管理</span>
+                <span>主数据</span>
               </template>
               <el-menu-item-group>
                 <!-- <template slot="title">分组一</template> -->
+                <el-menu-item index="/assetType">车辆类型</el-menu-item>
                 <el-menu-item index="/page1">车辆类型</el-menu-item>
                 <el-menu-item index="/page2">数据维护</el-menu-item>
               </el-menu-item-group>

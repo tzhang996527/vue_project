@@ -10,6 +10,9 @@ import Page1 from '@/components/Page1'
 import Page2 from '@/components/Page2'
 import Page3 from '@/components/Page3'
 
+//master data
+import AssetType from '@/components/MasterData/AssetType'
+
 Vue.use(Router)
 
 // 嵌套路由
@@ -35,7 +38,8 @@ export default new Router({
         {path: 'article', name: '车辆监控', component: Article, },
         {path: 'page1', name: 'Page1', component: Page1, },
         {path: 'page2', name: 'Page2', component: Page2, },
-        {path: 'page3', name: 'Page3', component: Page3, }
+        {path: 'page3', name: 'Page3', component: Page3, },
+        {path: 'AssetType',name:'AssetType', component: AssetType}
       ]
     }
   ]
