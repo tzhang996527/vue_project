@@ -2,38 +2,37 @@
   <div class="app">
     <el-container style="height: 100%; border: 1px #eee">
       <el-header class="app-header">
-        <!-- 我是样例菜单 -->
-        <el-menu
-          default-active="/"
-          router
-          class="el-menu-demo tab-page"
-          mode="horizontal"
-          @select="handleSelect"
-          active-text-color="#409EFF"
-          background-color="#545c64"
-        >
-          <el-menu-item index="/">首页</el-menu-item>
-        </el-menu>
+        <el-row>
+          <el-col :span="6">
+            <div align="center">
+              <img src="@/assets/logo.png" :width="isCollapse ? '60' : '60'" height="60">
+            </div>
+          </el-col>
+          <el-col :span="18">
+            <!-- 我是样例菜单 -->
+            <el-menu
+              :default-active="defaultActive"
+              class="el-menu-demo"
+              mode="horizontal"
+              @select="handleSelect"
+              background-color="#545c64"
+              text-color="#fff"
+              active-text-color="#ffd04b"
+            >
+              <el-menu-item index="/">首页</el-menu-item>
 
-        <div class="app-header-userinfo">
-          <el-dropdown trigger="hover" :hide-on-click="false">
-            <span class="el-dropdown-link">
-              {{ username }}
-              <i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>我的消息</el-dropdown-item>
-              <el-dropdown-item>设置</el-dropdown-item>
-              <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
+              <el-submenu index="/2">
+                <template slot="title">我的工作台</template>
+                <el-menu-item index="2-1">我的消息</el-menu-item>
+                <el-menu-item index="2-2">设置</el-menu-item>
+                <el-menu-item index="2-3" @click.native="logout">退出登录</el-menu-item>
+              </el-submenu>
+            </el-menu>
+          </el-col>
+        </el-row>
       </el-header>
       <el-container>
-        <el-aside
-          class="app-side app-side-left"
-          :class="isCollapse=false"
-        >
+        <el-aside class="app-side app-side-left" :class="isCollapse=false">
           <div>
             <!-- 我是样例菜单 -->
             <el-menu

@@ -3,8 +3,10 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-// import '@/styles/index.scss'
-import 'font-awesome/scss/font-awesome.scss'
+import axios from 'axios'
+import zconst from './components/store/const'
+
+// import 'font-awesome/scss/font-awesome.scss'
 
 Vue.use(ElementUI)
 // Vue.use(VueAMap)
@@ -12,16 +14,10 @@ Vue.use(ElementUI)
 // var axios = require('axios')
 // axios.defaults.baseURL = 'http://localhost:8443/api'
 // 将API方法绑定到全局
-// Vue.prototype.$axios = axios
+axios.defaults.baseURL = process.env.API
+Vue.prototype.$axios = axios
+Vue.prototype.BASE_URL = zconst.BASE_URL
 Vue.config.productionTip = false
-
-// // https://lbs.amap.com/dev/key/app#
-// VueAMap.initAMapApiLoader({
-//   key: '3bc476fcc3ab479e7bdd7656857d2899',
-//   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
-//   // 默认高德 sdk 版本为 1.4.4
-//   v: '1.4.4'
-// });
 
 /* eslint-disable */
 new Vue({
