@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import Login from '@/components/TheLogin'
 import Container from '@/components/Container'
+import Container1 from '@/components/Container1'
 import Dashboard from '@/components/dashboard'
 import Article from '@/components/article'
 
@@ -32,7 +33,7 @@ export default new Router({
       path: '/',
       redirect: '/dashboard',
       name: 'Container',
-      component: Container,
+      component: Container1,
       children: [
         {path: 'dashboard', name: '车辆管理', component: Dashboard,},
         {path: 'article', name: '车辆监控', component: Article, },

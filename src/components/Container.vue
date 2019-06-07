@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <el-container>
+    <el-container style="height: 800px; border: 1px #eee">
       <el-aside
         class="app-side app-side-left"
         :class="isCollapse ? 'app-side-collapsed' : 'app-side-expanded'"
@@ -101,6 +101,7 @@
     </el-container>
   </div>
 </template>
+
 
 <script>
 export default {
