@@ -44,7 +44,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onGet">查询</el-button>
-            <el-button type="primary" @click="dialogFormVisible = true">创建</el-button>
+            <el-button type="primary" @click="onCreate">创建</el-button>
             <!-- dialog -->
           </el-form-item>
         </el-form>
@@ -85,7 +85,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="创建日期" width="180">
+          <el-table-column label="创建日期" width="180" :formatter="formatDate">
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
               <span style="margin-left: 10px">{{ scope.row.createdOn }}</span>
@@ -107,6 +107,7 @@ export default {
   data() {
     return {
       search: "",
+      edit: false,
       form: {
         assetType: "",
         assetText: ""
@@ -130,11 +131,17 @@ export default {
     };
   },
   methods: {
-    formatter(row, column) {
-      return row.address;
+    formatDate: function(row, column) {
+      debugger;
+      return row.createdBy;
     },
     handleEdit(index, row) {
-      console.log(index, row);
+      this.edit = true;
+      this.dialogFormVisible = true;
+      this.form.assetType = row.assetType;
+      this.form.assetText = row.assetText;
+      debugger;
+      console.log(index, row.createdBy);
     },
     handleDelete(index, row) {
       this.$axios({
@@ -144,19 +151,23 @@ export default {
           "Content-Type": "application/json",
           Origin: "http://localhost:8080"
         }
-      }).then(successResponse => {
-        debugger
-        this.tableData = successResponse.data;
-      }).catch(failResponse => {
+      })
+        .then(successResponse => {
+          debugger;
+          this.tableData = successResponse.data;
+        })
+        .catch(failResponse => {
           console.log(failResponse);
-        });;
+        });
       console.log(index, row);
     },
     onGet() {
       debugger;
 
       this.$axios
-        .get("/api/v1/assetType")
+        .get("/api/v1/assetType",{
+            params:{'assetType': this.formInline.assetType, 'assetText': this.formInline.assetText}
+        })
         .then(response => {
           this.tableData = response.data;
         })
@@ -164,39 +175,73 @@ export default {
           alert(error);
         });
     },
+    onCreate(){
+      this.dialogFormVisible = true;
+      this.edit = false;
+      this.form.assetType = "";
+      this.form.assetType = "";
+    },
     onSubmit() {
       // var axios = require("axios");
       // axios.defaults.baseURL = process.env.API;
       this.dialogFormVisible = false;
       debugger;
-      this.$axios({
-        url: "/api/v1/assetType",
-        method: "post",
-        data: {
-          assetType: this.form.assetType,
-          assetText: this.form.assetText,
-          del: ""
-        },
-        headers: {
-          "Content-Type": "application/json",
-          Origin: "http://localhost:8080"
-        }
-      })
-        .then(successResponse => {
-          debugger;
-          // this.responseResult = JSON.stringify(successResponse.data)
-          // // if (successResponse.data.code === 200) {
-          // this.$router.replace({path: '/index'})
-          // }
-          console.log(successResponse.data);
-          this.form.assetType = "";
-          this.form.assetText = "";
-          this.tableData = successResponse.data;
+      if (this.edit === false) {
+        this.$axios({
+          url: "/api/v1/assetType",
+          method: "post",
+          data: {
+            assetType: this.form.assetType,
+            assetText: this.form.assetText,
+            del: ""
+          },
+          headers: {
+            "Content-Type": "application/json",
+            Origin: "http://localhost:8080"
+          }
         })
-        .catch(failResponse => {
-          console.log(failResponse);
-        });
-      console.log("submit!");
+          .then(successResponse => {
+            debugger;
+            // this.responseResult = JSON.stringify(successResponse.data)
+            // // if (successResponse.data.code === 200) {
+            // this.$router.replace({path: '/index'})
+            // }
+            console.log(successResponse.data);
+            this.form.assetType = "";
+            this.form.assetText = "";
+            this.tableData = successResponse.data;
+          })
+          .catch(failResponse => {
+            console.log(failResponse);
+          });
+      } else {
+        this.$axios({
+          url: "/api/v1/assetType",
+          method: "put",
+          data: {
+            assetType: this.form.assetType,
+            assetText: this.form.assetText,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            Origin: "http://localhost:8080"
+          }
+        })
+          .then(successResponse => {
+            debugger;
+            // this.responseResult = JSON.stringify(successResponse.data)
+            // // if (successResponse.data.code === 200) {
+            // this.$router.replace({path: '/index'})
+            // }
+            console.log(successResponse.data);
+            this.form.assetType = "";
+            this.form.assetText = "";
+            this.tableData = successResponse.data;
+          })
+          .catch(failResponse => {
+            console.log(failResponse);
+          });
+      }
     }
   }
 };
