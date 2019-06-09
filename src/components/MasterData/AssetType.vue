@@ -130,6 +130,22 @@ export default {
       tableData: []
     };
   },
+  //用于数据初始化
+  created: function() {
+    this.$axios
+      .get("/api/v1/assetType",{
+        params: {
+            assetType: null,
+            assetText: null
+          }
+      })
+      .then(response => {
+        this.tableData = response.data;
+      })
+      .catch(function(error) {
+        alert(error);
+      });
+  },
   methods: {
     formatDate: function(row, column) {
       debugger;
@@ -165,8 +181,11 @@ export default {
       debugger;
 
       this.$axios
-        .get("/api/v1/assetType",{
-            params:{'assetType': this.formInline.assetType, 'assetText': this.formInline.assetText}
+        .get("/api/v1/assetType", {
+          params: {
+            assetType: this.formInline.assetType,
+            assetText: this.formInline.assetText
+          }
         })
         .then(response => {
           this.tableData = response.data;
@@ -175,11 +194,11 @@ export default {
           alert(error);
         });
     },
-    onCreate(){
+    onCreate() {
       this.dialogFormVisible = true;
       this.edit = false;
       this.form.assetType = "";
-      this.form.assetType = "";
+      this.form.assetText = "";
     },
     onSubmit() {
       // var axios = require("axios");
@@ -220,7 +239,7 @@ export default {
           method: "put",
           data: {
             assetType: this.form.assetType,
-            assetText: this.form.assetText,
+            assetText: this.form.assetText
           },
           headers: {
             "Content-Type": "application/json",

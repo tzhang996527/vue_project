@@ -54,6 +54,8 @@
                 <el-menu-item-group>
                   <!-- <template slot="title">分组一</template> -->
                   <el-menu-item index="/assetType">车辆类型</el-menu-item>
+                  <el-menu-item index="/asset">注册车辆</el-menu-item>
+                  <el-menu-item index="/location">仓库</el-menu-item>
                   <el-menu-item index="/page1">车辆类型</el-menu-item>
                   <el-menu-item index="/page2">数据维护</el-menu-item>
                 </el-menu-item-group>

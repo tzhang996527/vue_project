@@ -2,7 +2,7 @@
   <div>
     <!-- dialg -->
     <el-dialog
-      title="车辆维护"
+      title="仓库维护"
       :visible.sync="dialogFormVisible"
       width="30%"
       label-width="100px"
@@ -11,26 +11,18 @@
       <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" class="demo-ruleForm">
         <el-row>
           <el-col :span="18">
-            <el-form-item label="车辆编号" prop="name" style>
+            <el-form-item label="仓库编号" prop="name" style>
               <el-col :span="12">
-                <el-input maxlength="10" v-model="form.assetId"></el-input>
+                <el-input maxlength="10" v-model="form.locId"></el-input>
               </el-col>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="18">
-            <el-form-item label="车辆类型">
+            <el-form-item label="地址">
               <el-col :span="18">
-                <!-- <el-input maxlength="30" v-model="form.assetType"></el-input> -->
-                <el-select v-model="form.assetType" placeholder="请选择">
-                  <el-option
-                    v-for="item in tableAssetType"
-                    :key="item.assetType"
-                    :label="item.assetText"
-                    :value="item.assetType"
-                  ></el-option>
-                </el-select>
+                <el-input maxlength="50" v-model="form.address"></el-input>
               </el-col>
             </el-form-item>
           </el-col>
@@ -44,11 +36,11 @@
     <el-row>
       <el-col :span="18">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
-          <el-form-item label="车辆编号">
-            <el-input v-model="formInline.assetId" placeholder="车辆编号"></el-input>
+          <el-form-item label="仓库编号">
+            <el-input v-model="formInline.locId" placeholder="车辆类型"></el-input>
           </el-form-item>
-          <el-form-item label="车辆类型">
-            <el-input v-model="formInline.assetType" placeholder="车辆类型"></el-input>
+          <el-form-item label="地址">
+            <el-input v-model="formInline.address" placeholder="类型描述"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onGet">查询</el-button>
@@ -72,43 +64,42 @@
     </el-row>
     <el-row>
       <el-col :span="24">
-        <el-table :data="tableData" style="width: 100%" stripe border>
+        <el-table :data="tableData" style="width: 100%" stripe>
           <el-table-column type="index" width="50" fixed></el-table-column>
 
-          <el-table-column prop="assetId" label="车辆编号" sortable width="180" fixed></el-table-column>
-          <el-table-column label="车型" width="180">
+          <el-table-column prop="locId" label="仓库编号" sortable width="180" fixed></el-table-column>
+          <el-table-column label="地址" width="180">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.assetType }}</span>
+              <el-popover trigger="hover" placement="top">
+                <p>经度: {{ scope.row.lng }}</p>
+                <p>维度: {{ scope.row.lat }}</p>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="medium">{{ scope.row.address }}</el-tag>
+                </div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column label="省份" width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.province }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column label="车牌号" width="180">
+          <el-table-column label="城市" width="180">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.platenumber }}</span>
+              <span style="margin-left: 10px">{{ scope.row.city }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column label="制造商" width="180">
+          <el-table-column label="区域" width="180">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.make }}</span>
+              <span style="margin-left: 10px">{{ scope.row.district }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column label="车辆识别号" width="180">
+          <el-table-column label="邮编" width="180">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.vin }}</span>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="出厂日期" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.year }}</span>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="所在地" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.location }}</span>
+              <span style="margin-left: 10px">{{ scope.row.postalCode }}</span>
             </template>
           </el-table-column>
           <el-table-column label="创建人" width="180">
@@ -141,8 +132,8 @@ export default {
       search: "",
       edit: false,
       form: {
-        assetType: "",
-        assetId: ""
+        locId: "",
+        address: ""
       },
       rules: {
         name: [
@@ -154,22 +145,21 @@ export default {
         ]
       },
       formInline: {
-        assetType: "",
-        assetId: ""
+        locId: "",
+        address: ""
       },
       dialogTableVisible: false,
       dialogFormVisible: false,
-      tableData: [],
-      tableAssetType: []
+      tableData: []
     };
   },
   //用于数据初始化
   created: function() {
     this.$axios
-      .get("/api/v1/asset", {
+      .get("/api/v1/loc", {
         params: {
-          assetType: null,
-          assetId: null
+          locId: "",
+          address: ""
         }
       })
       .then(response => {
@@ -178,21 +168,6 @@ export default {
       .catch(function(error) {
         alert(error);
       });
-
-    // Init get asset type  
-    this.$axios
-        .get("/api/v1/assetType", {
-          params: {
-            assetType: null,
-            assetText: null
-          }
-        })
-        .then(response => {
-          this.tableAssetType = response.data;
-        })
-        .catch(function(error) {
-          alert(error);
-        });
   },
   methods: {
     formatDate: function(row, column) {
@@ -202,13 +177,14 @@ export default {
     handleEdit(index, row) {
       this.edit = true;
       this.dialogFormVisible = true;
-      this.form.assetType = row.assetType;
-      this.form.assetId = row.assetId;
+      this.form.locId = row.locId;
+      this.form.address = row.address;
       debugger;
+      console.log(index, row.createdBy);
     },
     handleDelete(index, row) {
       this.$axios({
-        url: "/api/v1/asset/" + row.assetId,
+        url: "/api/v1/loc/" + row.locId,
         method: "delete",
         headers: {
           "Content-Type": "application/json",
@@ -228,10 +204,10 @@ export default {
       debugger;
 
       this.$axios
-        .get("/api/v1/asset", {
+        .get("/api/v1/loc", {
           params: {
-            assetType: this.formInline.assetType,
-            assetId: this.formInline.assetId
+            locId: this.formInline.locId,
+            address: this.formInline.address
           }
         })
         .then(response => {
@@ -244,8 +220,8 @@ export default {
     onCreate() {
       this.dialogFormVisible = true;
       this.edit = false;
-      this.form.assetId = "";
-      this.form.assetType = "";
+      this.form.locId = "";
+      this.form.address = "";
     },
     onSubmit() {
       // var axios = require("axios");
@@ -254,11 +230,11 @@ export default {
       debugger;
       if (this.edit === false) {
         this.$axios({
-          url: "/api/v1/asset",
+          url: "/api/v1/loc",
           method: "post",
           data: {
-            assetId: this.form.assetId,
-            assetType: this.form.assetType,
+            locId: this.form.locId,
+            address: this.form.address,
             del: ""
           },
           headers: {
@@ -273,8 +249,8 @@ export default {
             // this.$router.replace({path: '/index'})
             // }
             console.log(successResponse.data);
-            this.form.assetId = "";
-            this.form.assetType = "";
+            this.form.locId = "";
+            this.form.address = "";
             this.tableData = successResponse.data;
           })
           .catch(failResponse => {
@@ -282,11 +258,11 @@ export default {
           });
       } else {
         this.$axios({
-          url: "/api/v1/asset",
+          url: "/api/v1/loc",
           method: "put",
           data: {
-            assetType: this.form.assetType,
-            assetId: this.form.assetId
+            locId: this.form.locId,
+            address: this.form.address
           },
           headers: {
             "Content-Type": "application/json",
@@ -300,8 +276,8 @@ export default {
             // this.$router.replace({path: '/index'})
             // }
             console.log(successResponse.data);
-            this.form.assetType = "";
-            this.form.assetId = "";
+            this.form.locId = "";
+            this.form.address = "";
             this.tableData = successResponse.data;
           })
           .catch(failResponse => {
