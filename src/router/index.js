@@ -15,6 +15,7 @@ import Page3 from '@/components/Page3'
 import AssetType from '@/components/MasterData/AssetType'
 import Asset from '@/components/MasterData/Asset'
 import Loc from '@/components/MasterData/Location'
+import TourList from '@/components/Tour/TourList'
 
 Vue.use(Router)
 
@@ -44,7 +45,8 @@ export default new Router({
         {path: 'page3', name: 'Page3', component: Page3, },
         {path: 'AssetType',name:'AssetType', component: AssetType},
         {path: 'Asset',name:'车辆注册', component: Asset},
-        {path: 'Location',name:'仓库地址', component: Loc}
+        {path: 'Location',name:'仓库地址', component: Loc},
+        {path: 'TourList',name:'行程清单', component: TourList}
       ]
     }
   ]
