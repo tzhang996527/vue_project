@@ -1,76 +1,99 @@
 <template>
-<div>
-  <el-table
-    :data="tableData1"
-    style="width: 100%"
-    row-key="id"
-    border
-    lazy
-    :load="load"
-    :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-    <el-table-column
-      prop="date"
-      label="日期"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="姓名"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="地址">
-    </el-table-column>
-  </el-table>
-</div>
+  <div>
+    <el-row>
+      <el-col :span="12">
+        <div class="grid-content bg-purple">
+          <el-form ref="form" :model="form" label-width="80px">
+            <el-form-item label="行程编号">
+              <el-input v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item label="发车地点">
+              <el-select v-model="form.region" placeholder="请选择活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="出发时间">
+              <el-col :span="11">
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="form.date1"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </el-col>
+              <el-col class="line" :span="2">-</el-col>
+              <el-col :span="11">
+                <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="预计达到">
+              <el-col :span="11">
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="form.date1"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </el-col>
+              <el-col class="line" :span="2">-</el-col>
+              <el-col :span="11">
+                <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="即时配送">
+              <el-switch v-model="form.delivery"></el-switch>
+            </el-form-item>
+            <!-- <el-form-item>
+              <el-button type="primary" @click="onSubmit">立即创建</el-button>
+              <el-button>取消</el-button>
+            </el-form-item> -->
+          </el-form>
+        </div>
+      </el-col>
+      <el-col :span="12">
+        <div class="grid-content bg-purple-light"></div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="18">
+        <div class="grid-content bg-purple-light">
+          <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="车辆监控" name="fourth">车辆监控</el-tab-pane>
+            <el-tab-pane label="车辆信息" name="first">车辆信息</el-tab-pane>
+            <el-tab-pane label="停靠站点" name="second">停靠站点</el-tab-pane>
+            <el-tab-pane label="货物清单" name="third">货物清单</el-tab-pane>
+            <el-tab-pane label="事件管理" name="five">事件管理</el-tab-pane>
+          </el-tabs>
+        </div>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 <script>
-  export default {
-    data() {
-      return {
-        tableData1: [{
-          id: 1,
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          id: 2,
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          id: 3,
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄',
-          hasChildren: true
-        }, {
-          id: 4,
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
+export default {
+  data() {
+    return {
+      activeName: 'second',
+      form: {
+        name: "",
+        region: "",
+        date1: "",
+        date2: "",
+        delivery: false,
+        type: [],
+        resource: "",
+        desc: ""
       }
+    };
+  },
+  methods: {
+    onSubmit() {
+      console.log("submit!");
     },
-    methods: {
-      load(tree, treeNode, resolve) {
-        setTimeout(() => {
-          resolve([
-            {
-              id: 31,
-              date: '2016-05-01',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1519 弄'
-            }, {
-              id: 32,
-              date: '2016-05-01',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1519 弄'
-            }
-          ])
-        }, 1000)
-      }
-    },
+    handleClick(tab, event) {
+        console.log(tab, event);
+    }
   }
+};
 </script>

@@ -15,7 +15,11 @@ import Page3 from '@/components/Page3'
 import AssetType from '@/components/MasterData/AssetType'
 import Asset from '@/components/MasterData/Asset'
 import Loc from '@/components/MasterData/Location'
+
+
+//tour
 import TourList from '@/components/Tour/TourList'
+import TourMain from '@/components/tour/TourMain'
 
 Vue.use(Router)
 
@@ -46,7 +50,10 @@ export default new Router({
         {path: 'AssetType',name:'AssetType', component: AssetType},
         {path: 'Asset',name:'车辆注册', component: Asset},
         {path: 'Location',name:'仓库地址', component: Loc},
-        {path: 'TourList',name:'行程清单', component: TourList}
+        // {path: 'TourList',name:'行程清单', component: TourList},
+        {path: '/TourMain',name:'查询行程', component: TourMain,
+        children:[{path: 'TourList',name:'行程清单', component: TourList}]
+      }
       ]
     }
   ]
