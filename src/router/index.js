@@ -50,9 +50,10 @@ export default new Router({
         {path: 'AssetType',name:'AssetType', component: AssetType},
         {path: 'Asset',name:'车辆注册', component: Asset},
         {path: 'Location',name:'仓库地址', component: Loc},
-        // {path: 'TourList',name:'行程清单', component: TourList},
-        {path: '/TourMain',name:'查询行程', component: TourMain,
-        children:[{path: 'TourList',name:'行程清单', component: TourList}]
+        {path: 'TourList',name:'tourlist', component: TourList},
+        // {path: '/TourList/:id',name:'tourlist', component: TourList},
+        {path: '/TourMain',name:'查询行程', component: TourMain
+        // children:[{path: 'TourList',name:'行程清单', component: TourList}]
       }
       ]
     }

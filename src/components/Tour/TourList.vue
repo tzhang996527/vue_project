@@ -5,7 +5,7 @@
         <div class="grid-content bg-purple">
           <el-form ref="form" :model="form" label-width="80px">
             <el-form-item label="行程编号">
-              <el-input v-model="form.name"></el-input>
+              <el-input v-model="form.tourid"></el-input>
             </el-form-item>
             <el-form-item label="发车地点">
               <el-select v-model="form.region" placeholder="请选择活动区域">
@@ -83,17 +83,31 @@ export default {
         delivery: false,
         type: [],
         resource: "",
-        desc: ""
+        desc: "",
+        tourid:""
       }
     };
+  },
+  created(){
+    debugger
+    this.getParams();
   },
   methods: {
     onSubmit() {
       console.log("submit!");
     },
     handleClick(tab, event) {
+      // console.log(this.$parent.$data.formInline.tourid);
         console.log(tab, event);
-    }
+    },
+    getParams:function(){
+    // 取到路由带过来的参数
+    debugger
+    var routerParams = this.$route.params.id;
+    // 将数据放在当前组件的数据内
+    console.log("传来的参数=="+routerParams);
+    this.form.tourid = routerParams;
+  }
   }
 };
 </script>

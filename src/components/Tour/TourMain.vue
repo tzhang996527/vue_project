@@ -1,35 +1,46 @@
 <template>
   <div>
-    <h1>Article</h1>
-    <el-button type="primary" @click="onSubmit">显示</el-button>
-    <el-button>取消</el-button>
-    <router-view></router-view>
+    <el-row>
+      <el-col :span="24">
+        <h1>行程查询</h1>
+        <el-form :inline="true" :model="formInline" class="demo-form-inline" title="行程查询">
+          <el-form-item label="行程编号">
+            <el-input  prefix-icon="el-icon-search" v-model="formInline.tourid" placeholder="请输入行程编号"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">查询</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <el-row>
+      <router-view></router-view>
+    </el-row>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      activeName: 'second',
-      form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: ""
-      }
+      formInline: {
+          tourid: ''
+        },
+      tourid: "",
+      activeName: "second"
     };
   },
   methods: {
     onSubmit() {
-      this.$router.push('/TourMain/tourlist')
-      console.log("submit!");
+      debugger
+      // var url = "/TourMain/tourlist";
+      var info = {id:this.formInline.tourid,message:"成功"};
+      var url = "/tourlist";
+      // this.$router.push(url);
+      this.$router.push({name:'tourlist',params:info})
+      console.log(this.formInline.tourid);
     },
     handleClick(tab, event) {
-        console.log(tab, event);
+      console.log(tab, event);
     }
   }
 };
