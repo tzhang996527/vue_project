@@ -107,7 +107,7 @@ span {
             <el-tab-pane label="车辆监控" name="tab_map">
               <div>
                 <div id="container-map" style="width:100%; height:500px"></div>
-                <button @click="addTool">加载</button>
+                <button @click="setVehiclePos">加载</button>
                 <button @click="addTraffic">交通</button>
                 <button @click="drawLine">路径</button>
                 <button @click="truckRoute">卡车</button>
@@ -278,7 +278,14 @@ export default {
         lng: "",
         lat: ""
       },
-
+      srcLoc: {
+        lng: "",
+        lat: ""
+      },
+      destLoc: {
+        lng: "",
+        lat: ""
+      },
       isVisible: false,
       trafficLayer: {},
       activeName: "tab_map",
@@ -307,9 +314,9 @@ export default {
     };
   },
   created() {
-    debugger;
     this.getParams();
     this.getTour();
+    debugger;
   },
   activated() {},
   mounted() {
@@ -317,7 +324,7 @@ export default {
       resizeEnable: true, //是否监控地图容器尺寸变化
       zoom: 15, //初始地图级别
       viewMode: "2D",
-      center: [121.54449, 31.218761],
+      center: [121.475476, 31.228477],
       zooms: [4, 18]
     });
 
@@ -329,36 +336,15 @@ export default {
     this.trafficLayer.hide();
     /* 添加工具条 */
     this.addTool();
-    /* 获取当前位置 */
-    // this.thisLocation()
-    /* 添加搜索功能 */
-    // this.search()
+    
+    //计划路线
+    this.truckRoute();
   },
   methods: {
     /* 设置车辆位置 */
     setVehiclePos() {
+      debugger;
       this.map.clearMap();
-
-      var y = array1.map(function(value, index) {
-        console.log(value); //可遍历到所有数组元素
-
-        return value + 10;
-      });
-      console.log(y); //[11, 12, 13, 14, 15]   返回一个新的数组
-
-      // this.header;
-      for (let p_stop in this.header.plannedStopsDetail) {
-      }
-
-      // 以 icon URL 的形式创建一个途经点
-      var viaMarker = new AMap.Marker({
-        position: new AMap.LngLat(121.546335, 31.217697),
-        // 将一张图片的地址设置为 icon
-        icon:
-          "//a.amap.com/jsapi_demos/static/demo-center/icons/dir-via-marker.png",
-        // 设置了 icon 以后，设置 icon 的偏移量，以 icon 的 [center bottom] 为原点
-        offset: new AMap.Pixel(-13, -30)
-      });
 
       // 创建一个 Icon
       var startIcon = new AMap.Icon({
@@ -373,13 +359,6 @@ export default {
         imageOffset: new AMap.Pixel(-9, -3)
       });
 
-      // 将 icon 传入 marker
-      var startMarker = new AMap.Marker({
-        position: new AMap.LngLat(121.539683, 31.206833),
-        icon: startIcon,
-        offset: new AMap.Pixel(-13, -30)
-      });
-
       // 创建一个 icon
       var endIcon = new AMap.Icon({
         size: new AMap.Size(25, 34),
@@ -389,28 +368,39 @@ export default {
         imageOffset: new AMap.Pixel(-95, -3)
       });
 
-      // 将 icon 传入 marker
-      var endMarker = new AMap.Marker({
-        position: new AMap.LngLat(121.543932, 31.215678),
-        icon: endIcon,
-        offset: new AMap.Pixel(-13, -30)
+      var max_seq = this.header.plannedStopsDetail.length - 1;
+      debugger;
+      var markerList = this.header.plannedStopsDetail.map(function(
+        value,
+        index
+      ) {
+        var oIcon = {};
+        if (index === 0) {
+          //first stop
+          oIcon = startIcon;
+        } else if (index === max_seq) {
+          oIcon = endIcon;
+        }
+        var oMarker = new AMap.Marker({
+          position: new AMap.LngLat(value.location.lng, value.location.lat),
+          icon: oIcon,
+          offset: new AMap.Pixel(-13, -30)
+        });
+        return oMarker;
       });
 
       // 将 markers 添加到地图
-      this.map.add([viaMarker, startMarker, endMarker]);
+      this.map.add(markerList);
     },
     /* 添加工具条 */
     addTool() {
-      AMap.plugin(["AMap.ToolBar", "AMap.Driving"], () => {
+      AMap.plugin(["AMap.ToolBar", "AMap.TruckDriving"], () => {
         let toolbar = new AMap.ToolBar();
         this.map.addControl(toolbar);
       });
     },
     addTraffic() {
       //实时路况图层
-      // debugger
-      // trafficLayer.setMap(this.map);
-
       if (this.isVisible) {
         this.trafficLayer.hide();
         this.isVisible = false;
@@ -419,26 +409,17 @@ export default {
         this.isVisible = true;
       }
     },
+
     drawLine() {
-      // 121.54449,31.218761
-      // 121.546335,31.217697
-      // 121.543932,31.215678
-      // 121.541615,31.212228
-      // dest
-      // 121.539683,31.206833
-      // 折线的节点坐标数组，每个元素为 AMap.LngLat 对象
-      var path = [
-        [121.54449, 31.218761],
-        [121.546335, 31.217697],
-        [121.543932, 31.215678],
-        [121.541615, 31.212228],
-        [121.539683, 31.206833]
-      ];
-
-      var test = AMap.LngLat();
       debugger;
+      this.setVehiclePos();
 
-      var test2 = util.dateFormat(new Date());
+      var path = this.header.plannedStopsDetail.map(function(value, index) {
+        var oGeo = [value.location.lng, value.location.lat];
+        return oGeo;
+      });
+
+      // var test2 = util.dateFormat(new Date());
 
       var polyline = new AMap.Polyline({
         path: path,
@@ -463,16 +444,35 @@ export default {
       this.map.setFitView([polyline]);
     },
     truckRoute() {
+      debugger;
+      this.map.clearMap();
       //构造路线导航类
-      var driving = new AMap.Driving({
+      var driving = new AMap.TruckDriving({
         map: this.map,
+        size: 4,    //车型大小，必填，1-4分别对应小型至大型
         panel: "panel"
       });
       // 根据起终点经纬度规划驾车导航路线
-      driving.search(
-        new AMap.LngLat(121.54449, 31.218761),
-        new AMap.LngLat(121.539683, 31.206833),
+      // driving.search(
+      //   new AMap.LngLat(this.srcLoc.lng, this.srcLoc.lat),
+      //   new AMap.LngLat(this.destLoc.lng, this.destLoc.lat),
+      //   function(status, result) {
+      //     debugger
+      //     // result 即是对应的驾车导航信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_DrivingResult
+      //     if (status === "complete") {
+      //       console.log("绘制驾车路线完成");
+      //     } else {
+      //       console.log("获取驾车数据失败：" + result);
+      //     }
+      //   }
+      // );
+      var path=[];
+      path.push({lnglat:[this.srcLoc.lng, this.srcLoc.lat]});//途径
+      path.push({lnglat:[this.destLoc.lng, this.destLoc.lat]});//终点
+
+      driving.search(path,
         function(status, result) {
+          debugger
           // result 即是对应的驾车导航信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_DrivingResult
           if (status === "complete") {
             console.log("绘制驾车路线完成");
@@ -510,6 +510,17 @@ export default {
         })
         .then(response => {
           this.header = response.data[0];
+          //set source location
+          this.srcLoc = {
+            lng: this.header.sourceLoc.lng,
+            lat: this.header.sourceLoc.lat
+          };
+
+          //set destination location
+          this.destLoc = {
+            lng: this.header.destloc.lng,
+            lat: this.header.destloc.lat
+          };
           debugger;
         })
         .catch(function(error) {
