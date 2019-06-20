@@ -163,9 +163,9 @@ span {
             <el-tab-pane label="停靠站点" name="tab_stop">
               <el-row>
                 <el-col :span="24">
-                  <el-table :data="header.plannedStops" style="width: 100%" stripe>
+                  <el-table :data="header.plannedStopsDetail" style="width: 100%" stripe>
                     <el-table-column prop="seq" label="编号" sortable width="80"></el-table-column>
-                    <el-table-column prop="locid" label="停靠站点"></el-table-column>
+                    <el-table-column prop="location.address" label="停靠站点"></el-table-column>
                     <el-table-column prop="status" label="行程状态"></el-table-column>
                     <el-table-column label="计划出发时间" width="180" :formatter="formatDate">
                       <template slot-scope="scope">
@@ -265,7 +265,7 @@ span {
 <script>
 import AMap from "AMap";
 import AMapUI from "AMapUI";
-import * as util from '../../utils/util'
+import * as util from "../../utils/util";
 
 export default {
   name: "map",
@@ -279,25 +279,7 @@ export default {
         lat: ""
       },
 
-      /* 选取的位置 */
-      chosePosition: {
-        location: "",
-        lng: "",
-        lat: ""
-      },
-
-      /* 范围圆的数据 */
-      myCircle: {},
-      /* 签到圆对象 */
-      circle: {},
-      /* 编辑器对象 */
-      circleEditor: null,
-      /* 拖拽对象 */
-      positionPickerObj: {},
-      /* 当前城市编码 */
-      citycode: "020",
-
-      isVisible: true,
+      isVisible: false,
       trafficLayer: {},
       activeName: "tab_map",
       header: {
@@ -330,13 +312,6 @@ export default {
     this.getTour();
   },
   activated() {},
-  // souruce
-  // 121.54449,31.218761
-  // 121.546335,31.217697
-  // 121.543932,31.215678
-  // 121.541615,31.212228
-  // dest
-  // 121.539683,31.206833
   mounted() {
     this.map = new AMap.Map("container-map", {
       resizeEnable: true, //是否监控地图容器尺寸变化
@@ -351,6 +326,7 @@ export default {
     });
     this.map.add(this.trafficLayer); //添加图层到地图
 
+    this.trafficLayer.hide();
     /* 添加工具条 */
     this.addTool();
     /* 获取当前位置 */
@@ -359,6 +335,70 @@ export default {
     // this.search()
   },
   methods: {
+    /* 设置车辆位置 */
+    setVehiclePos() {
+      this.map.clearMap();
+
+      var y = array1.map(function(value, index) {
+        console.log(value); //可遍历到所有数组元素
+
+        return value + 10;
+      });
+      console.log(y); //[11, 12, 13, 14, 15]   返回一个新的数组
+
+      // this.header;
+      for (let p_stop in this.header.plannedStopsDetail) {
+      }
+
+      // 以 icon URL 的形式创建一个途经点
+      var viaMarker = new AMap.Marker({
+        position: new AMap.LngLat(121.546335, 31.217697),
+        // 将一张图片的地址设置为 icon
+        icon:
+          "//a.amap.com/jsapi_demos/static/demo-center/icons/dir-via-marker.png",
+        // 设置了 icon 以后，设置 icon 的偏移量，以 icon 的 [center bottom] 为原点
+        offset: new AMap.Pixel(-13, -30)
+      });
+
+      // 创建一个 Icon
+      var startIcon = new AMap.Icon({
+        // 图标尺寸
+        size: new AMap.Size(25, 34),
+        // 图标的取图地址
+        image:
+          "//a.amap.com/jsapi_demos/static/demo-center/icons/dir-marker.png",
+        // 图标所用图片大小
+        imageSize: new AMap.Size(135, 40),
+        // 图标取图偏移量
+        imageOffset: new AMap.Pixel(-9, -3)
+      });
+
+      // 将 icon 传入 marker
+      var startMarker = new AMap.Marker({
+        position: new AMap.LngLat(121.539683, 31.206833),
+        icon: startIcon,
+        offset: new AMap.Pixel(-13, -30)
+      });
+
+      // 创建一个 icon
+      var endIcon = new AMap.Icon({
+        size: new AMap.Size(25, 34),
+        image:
+          "//a.amap.com/jsapi_demos/static/demo-center/icons/dir-marker.png",
+        imageSize: new AMap.Size(135, 40),
+        imageOffset: new AMap.Pixel(-95, -3)
+      });
+
+      // 将 icon 传入 marker
+      var endMarker = new AMap.Marker({
+        position: new AMap.LngLat(121.543932, 31.215678),
+        icon: endIcon,
+        offset: new AMap.Pixel(-13, -30)
+      });
+
+      // 将 markers 添加到地图
+      this.map.add([viaMarker, startMarker, endMarker]);
+    },
     /* 添加工具条 */
     addTool() {
       AMap.plugin(["AMap.ToolBar", "AMap.Driving"], () => {
@@ -422,21 +462,25 @@ export default {
       // 缩放地图到合适的视野级别
       this.map.setFitView([polyline]);
     },
-    truckRoute(){
-    //构造路线导航类
-    var driving = new AMap.Driving({
+    truckRoute() {
+      //构造路线导航类
+      var driving = new AMap.Driving({
         map: this.map,
         panel: "panel"
-    }); 
-    // 根据起终点经纬度规划驾车导航路线
-    driving.search(new AMap.LngLat(121.54449,31.218761), new AMap.LngLat(121.539683,31.206833), function(status, result) {
-        // result 即是对应的驾车导航信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_DrivingResult
-        if (status === 'complete') {
-            console.log('绘制驾车路线完成')
-        } else {
-            console.log('获取驾车数据失败：' + result)
+      });
+      // 根据起终点经纬度规划驾车导航路线
+      driving.search(
+        new AMap.LngLat(121.54449, 31.218761),
+        new AMap.LngLat(121.539683, 31.206833),
+        function(status, result) {
+          // result 即是对应的驾车导航信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_DrivingResult
+          if (status === "complete") {
+            console.log("绘制驾车路线完成");
+          } else {
+            console.log("获取驾车数据失败：" + result);
+          }
         }
-    });
+      );
     },
     formatDate: function(row, column) {
       debugger;
