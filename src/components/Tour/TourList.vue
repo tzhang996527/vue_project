@@ -315,7 +315,7 @@ export default {
   },
   created() {
     this.getParams();
-    this.getTour();
+    // this.getTour();
     debugger;
   },
   activated() {},
@@ -336,9 +336,11 @@ export default {
     this.trafficLayer.hide();
     /* 添加工具条 */
     this.addTool();
-    
+    debugger
+
+    this.getTour();
     //计划路线
-    this.truckRoute();
+    // this.truckRoute();
   },
   methods: {
     /* 设置车辆位置 */
@@ -521,6 +523,8 @@ export default {
             lng: this.header.destloc.lng,
             lat: this.header.destloc.lat
           };
+
+          this.truckRoute();
           debugger;
         })
         .catch(function(error) {
