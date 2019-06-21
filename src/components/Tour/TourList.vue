@@ -267,6 +267,9 @@ import AMap from "AMap";
 import AMapUI from "AMapUI";
 import * as util from "../../utils/util";
 
+// “./”：代表目前所在的目录。
+// “../”：代表上一层目录。
+// 以”/”开头：代表根目录。
 export default {
   name: "map",
   data() {
@@ -362,12 +365,20 @@ export default {
       });
 
       // 创建一个 icon
+      // var endIcon = new AMap.Icon({
+      //   size: new AMap.Size(25, 34),
+      //   image:
+      //     "//a.amap.com/jsapi_demos/static/demo-center/icons/dir-marker.png",
+      //   imageSize: new AMap.Size(135, 40),
+      //   imageOffset: new AMap.Pixel(-9, -3)
+      // });
+
       var endIcon = new AMap.Icon({
-        size: new AMap.Size(25, 34),
-        image:
-          "//a.amap.com/jsapi_demos/static/demo-center/icons/dir-marker.png",
-        imageSize: new AMap.Size(135, 40),
-        imageOffset: new AMap.Pixel(-95, -3)
+        size: new AMap.Size(128, 128),
+        image:"/static/truckyellow.png",
+          // "//a.amap.com/jsapi_demos/static/demo-center/icons/dir-marker.png",
+        imageSize: new AMap.Size(32, 32)
+        // imageOffset: new AMap.Pixel(-3, -3)
       });
 
       var max_seq = this.header.plannedStopsDetail.length - 1;
@@ -452,7 +463,10 @@ export default {
       var driving = new AMap.TruckDriving({
         map: this.map,
         size: 4,    //车型大小，必填，1-4分别对应小型至大型
-        panel: "panel"
+        panel: "panel",
+        isOutline:false,
+        autoFitView:true,
+        hideMarkers:true
       });
       // 根据起终点经纬度规划驾车导航路线
       // driving.search(
