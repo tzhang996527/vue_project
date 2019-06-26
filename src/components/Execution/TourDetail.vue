@@ -111,6 +111,7 @@ span {
                 <button @click="addTraffic">交通</button>
                 <button @click="drawLine">路径</button>
                 <button @click="truckRoute">卡车</button>
+                <button @click="reportPos">发送GPS</button>
                 <div id="panel"></div>
               </div>
             </el-tab-pane>
@@ -497,6 +498,7 @@ export default {
       });
 
       var path = [];
+      debugger
       path.push({ lnglat: [this.thisPosition.lng, this.thisPosition.lat] }); //途径
       path.push({ lnglat: [this.destLoc.lng, this.destLoc.lat] }); //终点
 
@@ -538,6 +540,34 @@ export default {
       console.log("传来的参数==" + routerParams);
       this.header.tourid = routerParams;
     },
+    reportPos(){
+        this.$axios({
+          url: "/api/v1/actualStop",
+          method: "post",
+          data: {
+            tourid: this.header.tourid,
+            lng:"121.475885",
+            lat:"31.23082",
+            seq: 1,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            Origin: "http://localhost:8080"
+          }
+        })
+          .then(successResponse => {
+            debugger;
+            this.header.actualStops.push(successResponse.data)
+            this.thisPosition.lng = successResponse.data.lng;
+            this.thisPosition.lat = successResponse.data.lat;
+            this.truckRoute();
+            
+          })
+          .catch(failResponse => {
+            debugger;
+            console.log(failResponse);
+          });
+    },
     getTour() {
       this.$axios
         .get("/api/v1/tourDetail", {
@@ -560,8 +590,7 @@ export default {
           };
 
           this.thisPosition = {
-            lng: this.header.actualStops[this.header.actualStops.length - 1]
-              .lng,
+            lng: this.header.actualStops[this.header.actualStops.length - 1].lng,
             lat: this.header.actualStops[this.header.actualStops.length - 1].lat
           };
           debugger;

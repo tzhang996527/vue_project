@@ -34,9 +34,9 @@ export default {
       debugger
       // var url = "/TourMain/tourlist";
       var info = {id:this.formInline.tourid,message:"成功"};
-      var url = "/tourlist";
+      // var url = "/tourdetail";
       // this.$router.push(url);
-      this.$router.push({name:'tourlist',params:info})
+      this.$router.push({name:'TourDetail',params:info})
       console.log(this.formInline.tourid);
     },
     handleClick(tab, event) {

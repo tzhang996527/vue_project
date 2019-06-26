@@ -2,24 +2,38 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Login from '@/components/TheLogin'
-import Container from '@/components/Container'
 import Container1 from '@/components/Container1'
-import Dashboard from '@/components/dashboard'
-import Article from '@/components/article'
-
-import Page1 from '@/components/Page1'
-import Page2 from '@/components/Page2'
-import Page3 from '@/components/Page3'
 
 //master data
 import AssetType from '@/components/MasterData/AssetType'
 import Asset from '@/components/MasterData/Asset'
-import Loc from '@/components/MasterData/Location'
+import Location from '@/components/MasterData/Location'
+import Customer from '@/components/MasterData/Customer'
+import Driver from '@/components/MasterData/Driver'
+import Event from '@/components/MasterData/Event'
+import ResvType from '@/components/MasterData/ResvType'
+import TourType from '@/components/MasterData/TourType'
 
+//planning
+import CreateTour from '@/components/Planning/CreateTour'
+import Reservation from '@/components/Planning/Reservation'
+import ResvList from '@/components/Planning/ResvList'
+import Schedule from '@/components/Planning/Schedule'
+import TourList from '@/components/Planning/TourList'
 
-//tour
-import TourList from '@/components/Tour/TourList'
-import TourMain from '@/components/tour/TourMain'
+//Execution
+import TourDetail from '@/components/Execution/TourDetail'
+import SearchTour from '@/components/Execution/SearchTour'
+import Monitor from '@/components/Execution/Monitor'
+
+//report
+import Dashboard from '@/components/Report/Dashboard'
+import Cost from '@/components/Report/Cost'
+import TourBroken from '@/components/Report/TourBroken'
+import TourETA from '@/components/Report/TourETA'
+import TourHistory from '@/components/Report/TourHistory'
+import TourRep from '@/components/Report/TourRep'
+import TourUsage from '@/components/Report/TourUsage'
 
 Vue.use(Router)
 
@@ -42,19 +56,34 @@ export default new Router({
       name: 'Container',
       component: Container1,
       children: [
-        {path: 'dashboard', name: '车辆管理', component: Dashboard,},
-        {path: 'article', name: '车辆监控', component: Article, },
-        {path: 'page1', name: 'Page1', component: Page1, },
-        {path: 'page2', name: 'Page2', component: Page2, },
-        {path: 'page3', name: 'Page3', component: Page3, },
+        //Master Data
         {path: 'AssetType',name:'AssetType', component: AssetType},
-        {path: 'Asset',name:'车辆注册', component: Asset},
-        {path: 'Location',name:'仓库地址', component: Loc},
-        {path: 'TourList',name:'tourlist', component: TourList},
-        // {path: '/TourList/:id',name:'tourlist', component: TourList},
-        {path: '/TourMain',name:'查询行程', component: TourMain
-        // children:[{path: 'TourList',name:'行程清单', component: TourList}]
-      }
+        {path: 'Asset',name:'Asset', component: Asset},
+        {path: 'Location',name:'Location', component: Location},
+        {path: 'tourType',name:'TourType', component: TourType},
+        {path: 'customer',name:'Customer', component: Customer},
+        {path: 'driver',name:'Driver', component: Driver},
+        {path: 'event',name:'Event', component: Event},
+        {path: 'resvType',name:'ResvType', component: ResvType},
+        {path: 'tourType',name:'TourType', component: TourType},
+        //planning
+        {path: 'createTour',name:'CreateTour', component: CreateTour},
+        {path: 'reservation',name:'Reservation', component: Reservation},
+        {path: 'resvList',name:'ResvList', component: ResvList},
+        {path: 'schedule',name:'Schedule', component: Schedule},
+        {path: 'tourList',name:'TourList', component: TourList},
+        //execution
+        {path: 'tourdetail',name:'TourDetail', component: TourDetail},
+        {path: 'searchTour',name:'searchTour', component: SearchTour},
+        {path: 'monitor',name:'Monitor', component: Monitor},
+        //report
+        {path: 'dashboard',name:'Dashboard', component: Dashboard},
+        {path: 'cost',name:'Cost', component: Cost},
+        {path: 'tourBroken',name:'TourBroken', component: TourBroken},
+        {path: 'tourETA',name:'TourETA', component: TourETA},
+        {path: 'tourHistory',name:'TourHistory', component: TourHistory},
+        {path: 'tourRep',name:'TourRep', component: TourRep},
+        {path: 'tourUsage',name:'TourUsage', component: TourUsage}
       ]
     }
   ]
