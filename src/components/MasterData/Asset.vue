@@ -4,24 +4,31 @@
     <el-dialog
       title="车辆维护"
       :visible.sync="dialogFormVisible"
-      width="30%"
+      width="60%"
       label-width="100px"
       label-position="left"
     >
       <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" class="demo-ruleForm">
         <el-row>
-          <el-col :span="18">
+          <el-col :span="12">
             <el-form-item label="车辆编号" prop="name" style>
               <el-col :span="12">
                 <el-input maxlength="10" v-model="form.assetId"></el-input>
               </el-col>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="车牌号码" prop="name" style>
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.platenumber"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row>
-          <el-col :span="18">
+          <el-col :span="12">
             <el-form-item label="车辆类型">
-              <el-col :span="18">
+              <el-col :span="12">
                 <!-- <el-input maxlength="30" v-model="form.assetType"></el-input> -->
                 <el-select v-model="form.assetType" placeholder="请选择">
                   <el-option
@@ -31,6 +38,45 @@
                     :value="item.assetType"
                   ></el-option>
                 </el-select>
+              </el-col>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="制造商">
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.make"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="车辆型号" style>
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.model"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="VIN"  style>
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.vin"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="出厂日期" style>
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.year"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="所在地"  style>
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.location"></el-input>
               </el-col>
             </el-form-item>
           </el-col>
@@ -94,6 +140,12 @@
             </template>
           </el-table-column>
 
+          <el-table-column label="车型" width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.model }}</span>
+            </template>
+          </el-table-column>
+
           <el-table-column label="车辆识别号" width="180">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.vin }}</span>
@@ -142,7 +194,14 @@ export default {
       edit: false,
       form: {
         assetType: "",
-        assetId: ""
+        assetId: "",
+        platenumber:"",
+        make:"",
+        model:"",
+        vin:"",
+        year:"",
+        hardware:"",
+        location:""
       },
       rules: {
         name: [
@@ -202,8 +261,7 @@ export default {
     handleEdit(index, row) {
       this.edit = true;
       this.dialogFormVisible = true;
-      this.form.assetType = row.assetType;
-      this.form.assetId = row.assetId;
+      this.form = row;
       debugger;
     },
     handleDelete(index, row) {
@@ -256,11 +314,12 @@ export default {
         this.$axios({
           url: "/api/v1/asset",
           method: "post",
-          data: {
-            assetId: this.form.assetId,
-            assetType: this.form.assetType,
-            del: ""
-          },
+          data: this.form,
+          // data: {
+          //   assetId: this.form.assetId,
+          //   assetType: this.form.assetType,
+          //   del: ""
+          // },
           headers: {
             "Content-Type": "application/json",
             Origin: "http://localhost:8080"
@@ -284,10 +343,11 @@ export default {
         this.$axios({
           url: "/api/v1/asset",
           method: "put",
-          data: {
-            assetType: this.form.assetType,
-            assetId: this.form.assetId
-          },
+          data: this.form,
+          // data: {
+          //   assetType: this.form.assetType,
+          //   assetId: this.form.assetId
+          // },
           headers: {
             "Content-Type": "application/json",
             Origin: "http://localhost:8080"
