@@ -58,7 +58,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="VIN"  style>
+            <el-form-item label="VIN" style>
               <el-col :span="12">
                 <el-input maxlength="10" v-model="form.vin"></el-input>
               </el-col>
@@ -74,7 +74,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="所在地"  style>
+            <el-form-item label="所在地" style>
               <el-col :span="12">
                 <el-input maxlength="10" v-model="form.location"></el-input>
               </el-col>
@@ -195,13 +195,13 @@ export default {
       form: {
         assetType: "",
         assetId: "",
-        platenumber:"",
-        make:"",
-        model:"",
-        vin:"",
-        year:"",
-        hardware:"",
-        location:""
+        platenumber: "",
+        make: "",
+        model: "",
+        vin: "",
+        year: "",
+        hardware: "",
+        location: ""
       },
       rules: {
         name: [
@@ -238,20 +238,20 @@ export default {
         alert(error);
       });
 
-    // Init get asset type  
+    // Init get asset type
     this.$axios
-        .get("/api/v1/assetType", {
-          params: {
-            assetType: null,
-            assetText: null
-          }
-        })
-        .then(response => {
-          this.tableAssetType = response.data;
-        })
-        .catch(function(error) {
-          alert(error);
-        });
+      .get("/api/v1/assetType", {
+        params: {
+          assetType: null,
+          assetText: null
+        }
+      })
+      .then(response => {
+        this.tableAssetType = response.data;
+      })
+      .catch(function(error) {
+        alert(error);
+      });
   },
   methods: {
     formatDate: function(row, column) {
@@ -304,6 +304,13 @@ export default {
       this.edit = false;
       this.form.assetId = "";
       this.form.assetType = "";
+      this.form.platenumber = "";
+      this.form.make = "";
+      this.form.model = "";
+      this.form.vin = "";
+      this.form.year = "";
+      this.form.hardware = "";
+      this.form.location = "";
     },
     onSubmit() {
       // var axios = require("axios");

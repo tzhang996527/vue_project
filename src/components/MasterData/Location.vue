@@ -4,16 +4,23 @@
     <el-dialog
       title="仓库维护"
       :visible.sync="dialogFormVisible"
-      width="30%"
+      width="60%"
       label-width="100px"
       label-position="left"
     >
       <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" class="demo-ruleForm">
         <el-row>
-          <el-col :span="18">
+          <el-col :span="12">
             <el-form-item label="仓库编号" prop="name" style>
               <el-col :span="12">
                 <el-input maxlength="10" v-model="form.locId"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="省份" style>
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.province"></el-input>
               </el-col>
             </el-form-item>
           </el-col>
@@ -23,6 +30,45 @@
             <el-form-item label="地址">
               <el-col :span="18">
                 <el-input maxlength="50" v-model="form.address"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="城市" style>
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.city"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="区域" style>
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.district"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="邮编" style>
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.postalCode"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="经度" style>
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.lng"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="纬度" style>
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.lat"></el-input>
               </el-col>
             </el-form-item>
           </el-col>
@@ -37,10 +83,25 @@
       <el-col :span="18">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label="仓库编号">
-            <el-input v-model="formInline.locId" placeholder="车辆类型"></el-input>
+            <el-input v-model="formInline.locId" placeholder="仓库编号"></el-input>
           </el-form-item>
           <el-form-item label="地址">
-            <el-input v-model="formInline.address" placeholder="类型描述"></el-input>
+            <el-input v-model="formInline.address" placeholder="地址"></el-input>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24">
+        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+          <el-form-item label="省份">
+            <el-input v-model="formInline.province" placeholder="省份"></el-input>
+          </el-form-item>
+          <el-form-item label="城市">
+            <el-input v-model="formInline.city" placeholder="城市"></el-input>
+          </el-form-item>
+          <el-form-item label="区域">
+            <el-input v-model="formInline.district" placeholder="区域"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onGet">查询</el-button>
@@ -133,7 +194,13 @@ export default {
       edit: false,
       form: {
         locId: "",
-        address: ""
+        address: "",
+        lng: "",
+        lat: "",
+        city: "",
+        province: "",
+        district: "",
+        postalCode: ""
       },
       rules: {
         name: [
@@ -146,7 +213,10 @@ export default {
       },
       formInline: {
         locId: "",
-        address: ""
+        address: "",
+        city: "",
+        province: "",
+        district: ""
       },
       dialogTableVisible: false,
       dialogFormVisible: false,
@@ -179,6 +249,12 @@ export default {
       this.dialogFormVisible = true;
       this.form.locId = row.locId;
       this.form.address = row.address;
+      this.form.lng = row.lng;
+      this.form.lat = row.lat;
+      this.form.city = row.city;
+      this.form.province = row.province;
+      this.form.district = row.district;
+      this.form.postalCode = row.postalCode;
       debugger;
       console.log(index, row.createdBy);
     },
@@ -205,12 +281,17 @@ export default {
 
       this.$axios
         .get("/api/v1/loc", {
-          params: {
-            locId: this.formInline.locId,
-            address: this.formInline.address
-          }
+          params: this.formInline
+          // params: {
+          //   locId: this.formInline.locId,
+          //   address: this.formInline.address,
+          //   city: this.formInline.city,
+          //   province: this.formInline.province,
+          //   district: this.formInline.district
+          // }
         })
         .then(response => {
+          debugger;
           this.tableData = response.data;
         })
         .catch(function(error) {
@@ -222,6 +303,12 @@ export default {
       this.edit = false;
       this.form.locId = "";
       this.form.address = "";
+      this.form.lng = "";
+      this.form.lat = "";
+      this.form.city = "";
+      this.form.province = "";
+      this.form.district = "";
+      this.form.postalCode = "";
     },
     onSubmit() {
       // var axios = require("axios");
@@ -232,11 +319,12 @@ export default {
         this.$axios({
           url: "/api/v1/loc",
           method: "post",
-          data: {
-            locId: this.form.locId,
-            address: this.form.address,
-            del: ""
-          },
+          data: this.form,
+          // data: {
+          //   locId: this.form.locId,
+          //   address: this.form.address,
+          //   del: ""
+          // },
           headers: {
             "Content-Type": "application/json",
             Origin: "http://localhost:8080"
@@ -251,6 +339,12 @@ export default {
             console.log(successResponse.data);
             this.form.locId = "";
             this.form.address = "";
+            this.form.lng = "";
+            this.form.lat = "";
+            this.form.city = "";
+            this.form.province = "";
+            this.form.district = "";
+            this.form.postalCode = "";
             this.tableData = successResponse.data;
           })
           .catch(failResponse => {
@@ -260,10 +354,11 @@ export default {
         this.$axios({
           url: "/api/v1/loc",
           method: "put",
-          data: {
-            locId: this.form.locId,
-            address: this.form.address
-          },
+          data: this.form,
+          // data: {
+          //   locId: this.form.locId,
+          //   address: this.form.address
+          // },
           headers: {
             "Content-Type": "application/json",
             Origin: "http://localhost:8080"
@@ -278,6 +373,12 @@ export default {
             console.log(successResponse.data);
             this.form.locId = "";
             this.form.address = "";
+            this.form.lng = "";
+            this.form.lat = "";
+            this.form.city = "";
+            this.form.province = "";
+            this.form.district = "";
+            this.form.postalCode = "";
             this.tableData = successResponse.data;
           })
           .catch(failResponse => {
