@@ -82,7 +82,7 @@ span {
               </el-col>
             </el-form-item>
             <el-form-item label="目的地址">
-              <el-select v-model="header.destloc.address"></el-select>
+              <el-select v-model="header.destLoc.address"></el-select>
             </el-form-item>
             <el-form-item label="预计达到">
               <el-col :span="11">
@@ -298,7 +298,7 @@ export default {
         sourceLoc: {
           address: ""
         },
-        destloc: {
+        destLoc: {
           address: ""
         },
         planDepart: "",
@@ -585,8 +585,8 @@ export default {
 
           //set destination location
           this.destLoc = {
-            lng: this.header.destloc.lng,
-            lat: this.header.destloc.lat
+            lng: this.header.destLoc.lng,
+            lat: this.header.destLoc.lat
           };
 
           this.thisPosition = {
