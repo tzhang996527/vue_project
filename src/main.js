@@ -5,6 +5,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 import zconst from './components/store/const'
+import masterData from './components/store/masterData'
 
 // import 'font-awesome/scss/font-awesome.scss'
 
@@ -17,6 +18,7 @@ Vue.use(ElementUI)
 axios.defaults.baseURL = process.env.API
 Vue.prototype.$axios = axios
 Vue.prototype.BASE_URL = zconst.BASE_URL
+Vue.prototype.MT_DATA = masterData;
 Vue.config.productionTip = false
 
 /* eslint-disable */

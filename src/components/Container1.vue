@@ -135,6 +135,54 @@ export default {
       isCollapse: false
     };
   },
+  created() {
+    //get all locations
+    this.$axios
+      .get("/api/v1/loc", {
+        params: {
+          locId: null,
+          address: null
+        }
+      })
+      .then(response => {
+        debugger;
+        this.MT_DATA.locations = response.data;
+      })
+      .catch(function(error) {
+        alert(error);
+      });
+
+    //get all vehicles
+    this.$axios
+      .get("/api/v1/asset", {
+        params: {
+          assetId: null,
+          assetTpye: null
+        }
+      })
+      .then(response => {
+        debugger;
+        this.MT_DATA.assets = response.data;
+      })
+      .catch(function(error) {
+        alert(error);
+      });
+
+    //get all tour types
+    this.$axios
+      .get("/api/v1/tourType", {
+        params: {
+          tourType: null
+        }
+      })
+      .then(response => {
+        debugger;
+        this.MT_DATA.tourTypes = response.data;
+      })
+      .catch(function(error) {
+        alert(error);
+      });
+  },
   computed: {
     // 默认激活的路由, 用来激活菜单选中状态
     defaultActive: function() {

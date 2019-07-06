@@ -1,27 +1,118 @@
 <template>
   <div>
-    <el-row>
-      <el-col :span="12">
-        <div class="grid-content bg-purple">
-          <el-form ref="form" :model="header" label-width="80px">
-            <el-form-item label="行程编号">
+    <el-dialog
+      title="添加站点"
+      :visible.sync="dialogFormVisible"
+      width="50%"
+      label-width="100px"
+      label-position="left">
+      <el-form ref="ruleForm" :model="form" label-width="80px" class="demo-ruleForm">
+        <el-row>
+          <el-col :span="18">
+            <el-form-item label="顺序" style>
               <el-col :span="10">
-                <el-input v-model="header.tourid" :disabled="true"></el-input>
+                <el-input maxlength="10" v-model="form.seq" :disabled="true"></el-input>
               </el-col>
             </el-form-item>
-            <el-form-item label="发车地点">
-              <el-select
-                v-model="header.sourceLoc.addres"
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="站点">
+              <el-col :span="18">
+                <el-select
+                v-model="form.locId"
                 placeholder="请选择"
                 filterable
-                default-first-option="true"
-              >
+                :default-first-option=true>
                 <el-option
                   v-for="item in locations"
                   :key="item.locId"
                   :label="item.address"
-                  :value="item.locId"
-                >
+                  :value="item.locId">
+                  <span style="float: left">{{ item.address }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.locId }}</span>
+                </el-option>
+              </el-select>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="计划到达时间">
+              <el-col :span="12">
+                <el-date-picker
+                  v-model="form.planArr"
+                  type="datetime"
+                  placeholder="选择日期时间"
+                  align="right"
+                  :picker-options="pickerOptions"
+                ></el-date-picker>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="计划出发时间">
+              <el-col :span="12">
+                <el-date-picker
+                  v-model="form.planDepart"
+                  type="datetime"
+                  placeholder="选择日期时间"
+                  align="right"
+                  :picker-options="pickerOptions"
+                ></el-date-picker>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="onSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-row>
+      <el-col :span="18">
+          <el-form ref="form" :model="header" label-width="80px" :inline=true>
+            <el-form-item label="行程编号">
+                <el-input v-model="header.tourid" :disabled=true></el-input>
+            </el-form-item>
+            <el-form-item>
+            <el-button type="primary" @click="onSave">保存</el-button>
+          </el-form-item>
+          <el-form ref="form" :model="header" label-width="80px" :inline=true>
+            <el-form-item label="行程类型">
+              <el-select
+                v-model="header.tourType"
+                placeholder="请选择"
+                filterable
+                :default-first-option="true">
+                <el-option
+                  v-for="item in tourTypes"
+                  :key="item.tourType"
+                  :label="item.text"
+                  :value="item.tourType">
+                  <span style="float: left">{{ item.text }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.tourType }}</span>
+                </el-option>
+              </el-select>
+              </el-form-item>
+          </el-form>
+          <el-form ref="form" :model="header" label-width="80px" :inline=true>
+            <el-form-item label="发车地点">
+              <el-select
+                v-model="header.sourceLoc.locId"
+                placeholder="请选择"
+                filterable
+                :default-first-option="true">
+                <el-option
+                  v-for="item in locations"
+                  :key="item.locId"
+                  :label="item.address"
+                  :value="item.locId">
                   <span style="float: left">{{ item.address }}</span>
                   <span style="float: right; color: #8492a6; font-size: 13px">{{ item.locId }}</span>
                 </el-option>
@@ -38,19 +129,19 @@
                 ></el-date-picker>
               </el-col>
             </el-form-item>
+            </el-form>
+            <el-form ref="form" :model="header" label-width="80px" :inline=true>
             <el-form-item label="目的地址">
               <el-select
-                v-model="header.destLoc.addres"
+                v-model="header.destLoc.locId"
                 placeholder="请选择"
                 filterable
-                default-first-option="true"
-              >
+                :default-first-option=true>
                 <el-option
                   v-for="item in locations"
                   :key="item.locId"
                   :label="item.address"
-                  :value="item.locId"
-                >
+                  :value="item.locId">
                   <span style="float: left">{{ item.address }}</span>
                   <span style="float: right; color: #8492a6; font-size: 13px">{{ item.locId }}</span>
                 </el-option>
@@ -67,12 +158,8 @@
                 ></el-date-picker>
               </el-col>
             </el-form-item>
-            <!-- <el-form-item>
-              <el-button type="primary" @click="onSubmit">立即创建</el-button>
-              <el-button>取消</el-button>
-            </el-form-item>-->
+            </el-form>
           </el-form>
-        </div>
       </el-col>
       <el-col :span="12">
         <div class="grid-content bg-purple-light"></div>
@@ -86,22 +173,22 @@
               <el-row>
                 <el-col :span="18">
                   <div class="grid-content bg-purple">
-                    <el-form ref="form" :model="header" label-width="100px">
-                      <el-form-item label="车辆编号" filterable>
-                        <el-col :span="12">
+                    <!-- <el-form ref="form" :model="header" label-width="auto"> -->
+                      
+                      <el-form ref="form" :model="header" label-width="auto" :inline=true>
+                        <el-form-item label="车辆编号" filterable>
+                        <!-- <el-col :span="12"> -->
                           <el-select
                             v-model="header.vehicle.assetId"
                             placeholder="请选择"
                             filterable
-                            default-first-option="true"
-                            @change="setVeh"
-                          >
+                            :default-first-option=true
+                            @change="setVeh">
                             <el-option
                               v-for="item in vehs"
                               :key="item.assetId"
                               :label="item.platenumber"
-                              :value="item.assetId"
-                            >
+                              :value="item.assetId">
                               <span
                                 style="float: left"
                               >{{ item.platenumber + "," + item.assetType }}</span>
@@ -110,7 +197,7 @@
                               >{{ item.assetId }}</span>
                             </el-option>
                           </el-select>
-                        </el-col>
+                        <!-- </el-col> -->
                       </el-form-item>
                       <el-form-item label="车辆类型">
                         <el-select v-model="header.vehicle.assetType"></el-select>
@@ -128,13 +215,13 @@
                         <el-select v-model="header.vehicle.vin"></el-select>
                       </el-form-item>
                       <el-form-item label="出厂日期">
-                        <el-col :span="11">
+                        <!-- <el-col :span="11"> -->
                           <el-date-picker
                             type="date"
                             v-model="header.vehicle.year"
                             style="width: 100%;"
                           ></el-date-picker>
-                        </el-col>
+                        <!-- </el-col> -->
                       </el-form-item>
                       <el-form-item label="车载设备编号">
                         <el-select v-model="header.vehicle.hardware"></el-select>
@@ -142,7 +229,8 @@
                       <el-form-item label="车辆所在地">
                         <el-select v-model="header.vehicle.location"></el-select>
                       </el-form-item>
-                    </el-form>
+                      </el-form>
+                    <!-- </el-form> -->
                   </div>
                 </el-col>
                 <el-col :span="12">
@@ -155,7 +243,8 @@
                 <el-col :span="24">
                   <el-table :data="header.plannedStopsDetail" style="width: 100%" stripe>
                     <el-table-column prop="seq" label="编号" sortable width="80"></el-table-column>
-                    <el-table-column prop="location.address" label="停靠站点"></el-table-column>
+                    <el-table-column prop="address" label="停靠站点">
+                    </el-table-column>
                     <el-table-column prop="status" label="行程状态"></el-table-column>
                     <el-table-column label="计划出发时间" width="180" :formatter="formatDate">
                       <template slot-scope="scope">
@@ -181,8 +270,7 @@
                     </el-table-column>
                   </el-table>
                   <div style="margin-top: 20px">
-                    <el-button @click="createStop" size="mini"
-                          type="primary">添加</el-button>
+                    <el-button @click="addStop" size="mini" type="primary">添加</el-button>
                   </div>
                 </el-col>
               </el-row>
@@ -219,6 +307,17 @@ export default {
   name: "map",
   data() {
     return {
+      edit: false,
+      item:[],
+      form:{
+        locId:"",
+        address:"",
+        seq:"",
+        planDepart:"",
+        planArr:"",
+        status:"P"
+      },
+      dialogFormVisible: false,
       pickerOptions: {
         shortcuts: [
           {
@@ -228,34 +327,37 @@ export default {
             }
           },
           {
-            text: "昨天",
+            text: "明天",
             onClick(picker) {
               const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              date.setTime(date.getTime() + 3600 * 1000 * 24);
               picker.$emit("pick", date);
             }
           },
           {
-            text: "一周前",
+            text: "一周后",
             onClick(picker) {
               const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
               picker.$emit("pick", date);
             }
           }
         ]
       },
       locations: [],
+      tourTypes:[],
       vehs: [],
       activeName: "tab_veh", //default tab
       header: {
         tourid: "$1",
+        tourType:"",
         sourceLoc: {
-          address: ""
+          locId: ""
         },
         destLoc: {
-          address: ""
+          locId: ""
         },
+        plannedStopsDetail: [],
         planDepart: "",
         planArr: "",
         vehicle: {
@@ -273,40 +375,47 @@ export default {
     };
   },
   created() {
-    //get all locations
-    this.$axios
-      .get("/api/v1/loc", {
-        params: {
-          locId: null,
-          address: null
-        }
-      })
-      .then(response => {
-        debugger;
-        this.locations = response.data;
-      })
-      .catch(function(error) {
-        alert(error);
-      });
-
-    //get all vehicles
-    this.$axios
-      .get("/api/v1/asset", {
-        params: {
-          assetId: null,
-          assetTpye: null
-        }
-      })
-      .then(response => {
-        debugger;
-        this.vehs = response.data;
-      })
-      .catch(function(error) {
-        alert(error);
-      });
+    if(this.MT_DATA){
+      this.locations = this.MT_DATA.locations;
+      this.tourTypes = this.MT_DATA.tourTypes;
+      this.vehs      = this.MT_DATA.assets;
+    }
   },
   mounted() {},
   methods: {
+    onSave(){
+      debugger
+      let postData = this.header;
+      this.$axios({
+          url: "/api/v1/tour",
+          method: "post",
+          data: postData,
+          headers: {
+            "Content-Type": "application/json",
+            Origin: "http://localhost:8080"
+          }
+        }).then(successResponse => {
+          this.$notify({
+            title: '成功',
+            message: '行程 '+ successResponse.data +' 创建成功',
+            type: 'success'
+          });
+          this.header.tourid = successResponse.data;
+            debugger;
+        }).catch(failResponse => {
+            console.log(failResponse);
+      });
+    },
+    addStop() {
+      this.edit = false;
+      this.dialogFormVisible = true;
+      this.form.locId="";
+      this.form.address="";
+      this.form.seq=this.header.plannedStopsDetail.length+1;
+      this.form.planDepart="";
+      this.form.planArr="";
+      this.form.status="P";
+    },
     setVeh(vehId) {
       for (let v of this.vehs) {
         if (v.assetId === vehId) {
@@ -332,7 +441,49 @@ export default {
       // return row.createdBy;
     },
     onSubmit() {
+      this.dialogFormVisible = false;
+      if(!this.edit){
+      let a = {};
+      a.locid = this.form.locId;
+      let location = this.locations.find(location => {
+          return location.locId == a.locid;
+      });
+      a.address = location.address;
+      a.seq=this.form.seq;
+      a.planDepart = this.form.planDepart;
+      a.planArr = this.form.planArr;
+      a.status =  this.form.status;
+      this.header.plannedStopsDetail.push(a);
+      }else{
+        //edit
+        let idx = this.form.seq - 1;
+        let locId = this.form.locId;
+        this.header.plannedStopsDetail[idx].locid = this.form.locId;
+        let location = this.locations.find(location => {
+          return location.locId == locId;
+        });
+        this.header.plannedStopsDetail[idx].address = location.address;
+        this.header.plannedStopsDetail[idx].planDepart = this.form.planDepart;
+        this.header.plannedStopsDetail[idx].planArr = this.form.planArr;
+      }
+      debugger;
       console.log("submit!");
+    },
+    handleEdit(index, row) {
+      this.edit = true
+      this.dialogFormVisible = true;
+      this.form.locId   = row.locId;
+      this.form.address = row.address;
+      this.form.seq    = row.seq;
+      this.form.planDepart = row.planDepart;
+      this.form.planArr    = row.planArr;
+      this.form.status     = row.status;
+    },
+    handleDelete(index, row) {
+      let idx = row.seq - 1;
+      debugger
+      this.header.plannedStopsDetail.splice(idx,1);
+      debugger
     },
     handleClick(tab, event) {
       // console.log(this.$parent.$data.formInline.tourid);

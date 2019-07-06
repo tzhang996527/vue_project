@@ -67,34 +67,88 @@ span {
 <template>
   <div>
     <el-row>
-      <el-col :span="12">
-        <div class="grid-content bg-purple">
-          <el-form ref="form" :model="header" label-width="80px">
+      <el-col :span="18">
+          <el-form ref="form" :model="header" label-width="80px" :inline=true>
             <el-form-item label="行程编号">
-              <el-input v-model="header.tourid"></el-input>
+                <el-input v-model="header.tourid" :disabled=true></el-input>
             </el-form-item>
+            <el-form-item>
+          </el-form-item>
+          <el-form ref="form" :model="header" label-width="80px" :inline=true>
+            <el-form-item label="行程类型">
+              <el-select
+                v-model="header.tourType"
+                placeholder="请选择"
+                filterable
+                :default-first-option="true">
+                <el-option
+                  v-for="item in tourTypes"
+                  :key="item.tourType"
+                  :label="item.text"
+                  :value="item.tourType">
+                  <span style="float: left">{{ item.text }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.tourType }}</span>
+                </el-option>
+              </el-select>
+              </el-form-item>
+          </el-form>
+          <el-form ref="form" :model="header" label-width="80px" :inline=true>
             <el-form-item label="发车地点">
-              <el-select v-model="header.sourceLoc.address"></el-select>
+              <el-select
+                v-model="header.sourceLoc.locId"
+                placeholder="请选择"
+                filterable
+                :default-first-option="true">
+                <el-option
+                  v-for="item in locations"
+                  :key="item.locId"
+                  :label="item.address"
+                  :value="item.locId">
+                  <span style="float: left">{{ item.address }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.locId }}</span>
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="出发时间">
               <el-col :span="11">
-                <el-date-picker type="date" v-model="header.planDepart" style="width: 100%;"></el-date-picker>
+                <el-date-picker
+                  v-model="header.planDepart"
+                  type="datetime"
+                  placeholder="选择日期时间"
+                  align="right"
+                ></el-date-picker>
               </el-col>
             </el-form-item>
+            </el-form>
+            <el-form ref="form" :model="header" label-width="80px" :inline=true>
             <el-form-item label="目的地址">
-              <el-select v-model="header.destLoc.address"></el-select>
+              <el-select
+                v-model="header.destLoc.locId"
+                placeholder="请选择"
+                filterable
+                :default-first-option=true>
+                <el-option
+                  v-for="item in locations"
+                  :key="item.locId"
+                  :label="item.address"
+                  :value="item.locId">
+                  <span style="float: left">{{ item.address }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.locId }}</span>
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="预计达到">
               <el-col :span="11">
-                <el-date-picker type="date" v-model="header.planArr" style="width: 100%;"></el-date-picker>
+                <el-date-picker
+                  v-model="header.planArr"
+                  type="datetime"
+                  placeholder="选择日期时间"
+                  align="right"
+                ></el-date-picker>
               </el-col>
             </el-form-item>
-            <!-- <el-form-item>
-              <el-button type="primary" @click="onSubmit">立即创建</el-button>
-              <el-button>取消</el-button>
-            </el-form-item>-->
+            </el-form>
           </el-form>
-        </div>
       </el-col>
       <el-col :span="12">
         <div class="grid-content bg-purple-light"></div>
@@ -102,7 +156,6 @@ span {
     </el-row>
     <el-row>
       <el-col :span="24">
-        <div class="grid-content bg-purple-light">
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="车辆监控" name="tab_map">
               <div>
@@ -118,8 +171,7 @@ span {
             <el-tab-pane label="车辆信息" name="tab_veh">
               <el-row>
                 <el-col :span="18">
-                  <div class="grid-content bg-purple">
-                    <el-form ref="form" :model="header" label-width="100px">
+                    <el-form ref="form" :model="header" label-width="auto" :inline=true>
                       <el-form-item label="车辆编号">
                         <el-input v-model="header.vehicle.assetId"></el-input>
                       </el-form-item>
@@ -139,13 +191,10 @@ span {
                         <el-select v-model="header.vehicle.vin"></el-select>
                       </el-form-item>
                       <el-form-item label="出厂日期">
-                        <el-col :span="11">
                           <el-date-picker
                             type="date"
                             v-model="header.vehicle.year"
-                            style="width: 100%;"
                           ></el-date-picker>
-                        </el-col>
                       </el-form-item>
                       <el-form-item label="车载设备编号">
                         <el-select v-model="header.vehicle.hardware"></el-select>
@@ -154,7 +203,6 @@ span {
                         <el-select v-model="header.vehicle.location"></el-select>
                       </el-form-item>
                     </el-form>
-                  </div>
                 </el-col>
                 <el-col :span="12">
                   <div class="grid-content bg-purple-light"></div>
@@ -258,7 +306,6 @@ span {
               </el-row>
             </el-tab-pane>
           </el-tabs>
-        </div>
       </el-col>
     </el-row>
   </div>
@@ -293,6 +340,8 @@ export default {
       isVisible: false,
       trafficLayer: {},
       activeName: "tab_map",
+      tourTypes:[],
+      locations:[],
       header: {
         tourid: "",
         sourceLoc: {
@@ -318,6 +367,11 @@ export default {
     };
   },
   created() {
+    debugger
+    if(this.MT_DATA){
+      this.tourTypes = this.MT_DATA.tourTypes;
+      this.locations = this.MT_DATA.locations;
+    }
     this.getParams();
   },
   activated() {},
@@ -589,10 +643,14 @@ export default {
             lat: this.header.destLoc.lat
           };
 
+          //this.header.vehicle = response.data.vehicle;
+
+          let len = response.data.actualStops.length;
           this.thisPosition = {
-            lng: this.header.actualStops[this.header.actualStops.length - 1].lng,
-            lat: this.header.actualStops[this.header.actualStops.length - 1].lat
+            lng: len > 0 ? response.data.actualStops[len - 1].lng : response.data.sourceLoc.lng,
+            lat: len > 0 ? response.data.actualStops[len - 1].lat : response.data.sourceLoc.lat
           };
+
           debugger;
           this.truckRoute();
         })
