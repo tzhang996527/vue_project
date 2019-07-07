@@ -66,12 +66,12 @@
         <el-table :data="tableData" style="width: 100%" stripe>
           <el-table-column type="index" width="50"></el-table-column>
 
-          <el-table-column label="行程编号" sortable width="180">
+          <el-table-column label="行程编号" sortable width="120">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.tourid }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="类型" width="180">
+          <el-table-column label="类型" width="80">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
                 <p>类型: {{ scope.row.tourid }}</p>

@@ -182,6 +182,36 @@ export default {
       .catch(function(error) {
         alert(error);
       });
+
+    //get all customrs
+    this.$axios
+      .get("/api/v1/customer", {
+        params: {
+          custId: null
+        }
+      })
+      .then(response => {
+        debugger;
+        this.MT_DATA.customers = response.data;
+      })
+      .catch(function(error) {
+        alert(error);
+      });
+
+    //get all drivers
+    this.$axios
+      .get("/api/v1/driver", {
+        params: {
+          custId: null
+        }
+      })
+      .then(response => {
+        debugger;
+        this.MT_DATA.drivers = response.data;
+      })
+      .catch(function(error) {
+        alert(error);
+      });
   },
   computed: {
     // 默认激活的路由, 用来激活菜单选中状态

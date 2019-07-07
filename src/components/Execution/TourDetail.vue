@@ -171,7 +171,7 @@ span {
             <el-tab-pane label="车辆信息" name="tab_veh">
               <el-row>
                 <el-col :span="18">
-                    <el-form ref="form" :model="header" label-width="auto" :inline=true>
+                    <el-form ref="form" :model="header" label-width="100px" :inline=true>
                       <el-form-item label="车辆编号">
                         <el-input v-model="header.vehicle.assetId"></el-input>
                       </el-form-item>
@@ -256,6 +256,43 @@ span {
                 </el-col>
               </el-row>
             </el-tab-pane>
+            <el-tab-pane label="客户信息" name="tab_cust">
+              <el-row>
+                <el-col :span="18">
+                  <!-- inline = true的时候el-form-item需要加label-width -->
+                  <el-form ref="form" :model="header" :inline="false" label-width="80px">
+                    <el-form-item label="客户编号" label-width="80px" filterable>
+                      <el-col :span="8">
+                      <el-input v-model="header.soldto.custId" :disabled="true"></el-input>
+                      </el-col>
+                    </el-form-item>
+                  </el-form>
+                  <el-form ref="form" :model="header" :inline="true" label-width="80px">
+                    <el-form-item label="客户名" label-width="80px">
+                      <el-input v-model="header.soldto.name" :disabled="true"></el-input>
+                    </el-form-item>
+                    <el-form-item label="客户地址" label-width="80px">
+                      <el-input v-model="header.soldto.address" :disabled="true"></el-input>
+                    </el-form-item>
+                  </el-form>
+                  <el-form ref="form" :model="header" :inline="false" label-width="80px">
+                    <el-form-item label="送达方" filterable label-width="80px">
+                      <el-col :span="8">
+                      <el-input v-model="header.shipto.custId" :disabled="true"></el-input>
+                      </el-col>
+                    </el-form-item>
+                  </el-form>
+                  <el-form ref="form" :model="header" :inline="true" label-width="80px">
+                    <el-form-item label="客户名" label-width="80px">
+                      <el-input v-model="header.shipto.name" :disabled="true"></el-input>
+                    </el-form-item>
+                    <el-form-item label="客户地址" label-width="80px">
+                      <el-input v-model="header.shipto.address" :disabled="true"></el-input>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+            </el-tab-pane>
             <el-tab-pane label="货物清单" name="tab_item">
               <el-row>
                 <el-col :span="24">
@@ -269,6 +306,23 @@ span {
                   </el-table>
                 </el-col>
               </el-row>
+            </el-tab-pane>
+            <el-tab-pane label="驾驶员信息" name="tab_drv">
+              <el-form ref="form" :model="header" :inline="false" label-width="80px">
+                 <el-form-item label="驾驶员编号" label-width="100px">
+                   <el-col :span="8">
+                    <el-input v-model="header.driver.driverId" :disabled="true"></el-input>
+                   </el-col>
+                </el-form-item>
+              </el-form>
+              <el-form ref="form" :model="header" :inline="true" label-width="100px">
+                <el-form-item label="姓名" label-width="100px">
+                  <el-input v-model="header.driver.name" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" label-width="100px">
+                  <el-input v-model="header.driver.tel" :disabled="true"></el-input>
+                </el-form-item>
+              </el-form>
             </el-tab-pane>
             <el-tab-pane label="事件管理" name="tab_event">
               <el-row>
@@ -350,6 +404,23 @@ export default {
         },
         destLoc: {
           address: ""
+        },
+        driver: {
+          driverId: "",
+          name: "",
+          tel: ""
+        },
+        soldto:{
+          custId:"",
+          type:"",
+          name:"",
+          address:""
+        },
+        shipto:{
+          custId:"",
+          type:"",
+          name:"",
+          address:""
         },
         planDepart: "",
         planArr: "",
