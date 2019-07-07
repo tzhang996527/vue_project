@@ -344,6 +344,7 @@ export default {
       locations:[],
       header: {
         tourid: "",
+        exeStatus:"",
         sourceLoc: {
           address: ""
         },
@@ -401,9 +402,16 @@ export default {
   methods: {
     /* 设置车辆位置 */
     setVehPos() {
+
+      var img = "";
+      if(this.header.exeStatus==="01"){
+        img = "/static/lorrygreen.png"
+      }else{
+        img = "/static/truckyellow.png";
+      }
       var vehIcon = new AMap.Icon({
         size: new AMap.Size(128, 128),
-        image: "/static/truckyellow.png",
+        image: img,
         imageSize: new AMap.Size(32, 32)
         // imageOffset: new AMap.Pixel(-3, -3)
       });
