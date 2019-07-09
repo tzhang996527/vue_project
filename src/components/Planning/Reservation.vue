@@ -1,20 +1,240 @@
 <template>
   <div>
+    <!-- dialg -->
+    <el-dialog
+      title="车辆预定"
+      :visible.sync="dialogFormVisible"
+      width="60%"
+      label-width="100px"
+      label-position="left">
+      <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" class="demo-ruleForm">
+            <el-form-item label="预定编号" prop="name" style>
+              <el-col :span="12">
+                <el-input maxlength="10" v-model="form.resvId"></el-input>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="类型">
+              <el-col :span="18">
+                <el-select
+                  v-model="form.resvType"
+                  placeholder="请选择"
+                  filterable
+                  :default-first-option="true">
+                  <el-option
+                    v-for="item in resvTypes"
+                    :key="item.resvType"
+                    :label="item.text"
+                    :value="item.resvType">
+                    <span style="float: left">{{ item.text }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.resvType }}</span>
+                  </el-option>
+                </el-select>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="发车地点">
+              <el-col :span="18">
+                 <el-select
+                  v-model="form.sourceLocid"
+                  placeholder="请选择"
+                  filterable
+                  :default-first-option="true">
+                  <el-option
+                    v-for="item in locations"
+                    :key="item.locId"
+                    :label="item.address"
+                    :value="item.locId">
+                    <span style="float: left">{{ item.address }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.locId }}</span>
+                  </el-option>
+                </el-select>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="计划出发时间">
+              <el-col :span="18">
+                 <el-date-picker
+                  v-model="form.planDepart"
+                  type="datetime"
+                  placeholder="选择日期时间"
+                  align="right"
+                  :picker-options="pickerOptions"
+                ></el-date-picker>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="目的地址">
+              <el-col :span="18">
+                <el-select
+                  v-model="form.destLocid"
+                  placeholder="请选择"
+                  filterable
+                  :default-first-option="true">
+                  <el-option
+                    v-for="item in locations"
+                    :key="item.locId"
+                    :label="item.address"
+                    :value="item.locId">
+                    <span style="float: left">{{ item.address }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.locId }}</span>
+                  </el-option>
+                </el-select>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="计划到达时间">
+              <el-col :span="18">
+                 <el-date-picker
+                  v-model="form.planArr"
+                  type="datetime"
+                  placeholder="选择日期时间"
+                  align="right"
+                  :picker-options="pickerOptions"
+                ></el-date-picker>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="车辆编号" filterable label-width="100px">
+              <el-select
+                v-model="form.vehicleId"
+                placeholder="请选择"
+                filterable
+                :default-first-option="true"
+                @change="setVeh">
+                <el-option
+                  v-for="item in vehs"
+                  :key="item.assetId"
+                  :label="item.platenumber"
+                  :value="item.assetId">
+                  <span style="float: left">{{ item.platenumber + "," + item.assetType }}</span>
+                  <span
+                    style="float: right; color: #8492a6; font-size: 13px">{{ item.assetId }}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="驾驶员编号" filterable label-width="100px">
+              <el-select
+                v-model="form.driverId"
+                placeholder="请选择"
+                filterable
+                :default-first-option="true"
+                @change="setDriver">
+                <el-option
+                  v-for="item in drivers"
+                  :key="item.driverId"
+                  :label="item.driverId"
+                  :value="item.driverId">
+                  <span style="float: left">{{ item.name }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.driverId }}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="客户编号" label-width="80px" filterable>
+              <el-select
+                v-model="header.custId"
+                placeholder="请选择"
+                filterable
+                :default-first-option="true"
+                @change="setCust">
+                <el-option
+                  v-for="item in customers"
+                  :key="item.custId"
+                  :label="item.name"
+                  :value="item.custId">
+                  <span style="float: left">{{ item.address }}</span>
+                  <span
+                    style="float: right; color: #8492a6; font-size: 13px">{{ item.custId }}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="送达方" filterable label-width="80px">
+              <el-select
+                v-model="header.shipTo"
+                placeholder="请选择"
+                filterable
+                :default-first-option="true"
+                @change="setShipTo">
+                <el-option
+                  v-for="item in customers"
+                  :key="item.custId"
+                  :label="item.name"
+                  :value="item.custId">
+                  <span style="float: left">{{ item.name }}</span>
+                  <span
+                    style="float: right; color: #8492a6; font-size: 13px">{{ item.custId }}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="onSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
     <el-row>
-      <el-col :span="24">
-        <h1>车辆预定</h1>
-        <el-form :inline="true" :model="formInline" class="demo-form-inline" title="行程查询">
-          <el-form-item label="行程编号">
-            <el-input  prefix-icon="el-icon-search" v-model="formInline.tourid" placeholder="请输入行程编号"></el-input>
+      <el-col :span="18">
+        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+          <el-form-item label="预定编号">
+            <el-input v-model="formInline.resvId" placeholder="预定编号"></el-input>
+          </el-form-item>
+          <el-form-item label="类型">
+            <el-input v-model="formInline.resvType" placeholder="类型"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit" icon="el-icon-search">查询</el-button>
+            <el-button type="primary" @click="onGet">查询</el-button>
+            <el-button type="primary" @click="onCreate">创建</el-button>
+            <!-- dialog -->
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <el-row>
-      <router-view></router-view>
+      <el-col :span="24">
+        <el-table :data="tableData" style="width: 100%" stripe>
+          <el-table-column type="index" width="50"></el-table-column>
+
+          <el-table-column label="预定编号" sortable width="120">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.resvId }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="类型" width="80">
+            <template slot-scope="scope">
+              <el-popover trigger="hover" placement="top">
+                <p>类型: {{ scope.row.resvId }}</p>
+                <p>描述: {{ scope.row.resvType }}</p>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="medium">{{ scope.row.resvType }}</el-tag>
+                </div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column label="发车地点" width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.sourceLoc.address }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="计划发车时间" width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.planDepart }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="目的地址" width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.destLoc.address }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="计划到达时间" width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.planArr }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button size="mini" type="primary" @click="handleDetail(scope.$index, scope.row)">明细</el-button>
+              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -22,25 +242,231 @@
 export default {
   data() {
     return {
+      search: "",
+      edit: false,
+      form: {
+        resvId:"$1",
+        resvType:"",
+        sourceLocid:"",
+        planDepart:"",
+        destLocid:"",
+        planArr:"",
+        vehicleId:"",
+        driverId:"",
+        custId:"",
+        shipTo:""
+      },
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "今天",
+            onClick(picker) {
+              picker.$emit("pick", new Date());
+            }
+          },
+          {
+            text: "明天",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() + 3600 * 1000 * 24);
+              picker.$emit("pick", date);
+            }
+          },
+          {
+            text: "一周后",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", date);
+            }
+          }
+        ]
+      },
+      locations: [],
+      customers: [],
+      resvTypes: [],
+      drivers:[],
+      vehs: [],
       formInline: {
-          tourid: ''
-        },
-      tourid: "",
-      activeName: "second"
+        resvId: "",
+        resvType: "",
+        sourceLocid:"",
+        destLocid:"",
+        vehicleId:"",
+        driverId:"",
+        shipTo:""
+      },
+      dialogTableVisible: false,
+      dialogFormVisible: false,
+      tableData: []
     };
   },
+  //用于数据初始化
+  created: function() {
+    if (this.MT_DATA) {
+      this.locations = this.MT_DATA.locations;
+      this.vehs = this.MT_DATA.assets;
+      this.customers = this.MT_DATA.customers;
+      this.drivers = this.MT_DATA.drivers;
+    }
+
+    this.$axios
+      .get("/api/v1/reservation",{
+        params: {
+            resvId: null
+          }
+      })
+      .then(response => {
+        debugger
+        this.tableData = response.data;
+      })
+      .catch(function(error) {
+        alert(error);
+      });
+
+    this.$axios
+      .get("/api/v1/resvType",{
+        params: {
+            resvType: null
+          }
+      })
+      .then(response => {
+        debugger
+        this.resvTypes = response.data;
+      })
+      .catch(function(error) {
+        alert(error);
+      });
+  },
   methods: {
-    onSubmit() {
+    formatDate: function(row, column) {
+      debugger;
+      return row.createdBy;
+    },
+    handleDetail(index, row){
       debugger
       // var url = "/TourMain/tourlist";
-      var info = {id:this.formInline.tourid,message:"成功"};
-      var url = "/tourlist";
-      // this.$router.push(url);
-      this.$router.push({name:'tourlist',params:info})
+      var info = {id:row.tourid,message:"成功"};
+      this.$router.push({name:'TourDetail',params:info})
       console.log(this.formInline.tourid);
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
+    handleEdit(index, row) {
+      this.edit = true;
+      this.dialogFormVisible = true;
+      this.form.tourid = row.tourid;
+      this.form.tourType = row.tourType;
+      debugger;
+      console.log(index, row.createdBy);
+    },
+    handleDelete(index, row) {
+      this.$axios({
+        url: "/api/v1/reservation/" + row.tourid,
+        method: "delete",
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "http://localhost:8080"
+        }
+      })
+        .then(successResponse => {
+          debugger;
+          this.tableData = successResponse.data;
+        })
+        .catch(failResponse => {
+          console.log(failResponse);
+        });
+      console.log(index, row);
+    },
+    onGet() {
+      debugger;
+
+      this.$axios
+        .get("/api/v1/reservation", {
+          params: {
+            resvId: this.formInline.tourid,
+            resvType: this.formInline.tourType
+          }
+        })
+        .then(response => {
+          debugger
+          this.tableData = response.data;
+        })
+        .catch(function(error) {
+          alert(error);
+        });
+    },
+    onCreate() {
+      this.dialogFormVisible = true;
+      this.edit = false;
+      this.form.resvId="$1";
+      this.form.resvType="";
+      this.form.sourceLocid="";
+      this.form.planDepart="";
+      this.form.destLocid="";
+      this.form.planArr="";
+      this.form.vehicleId="";
+      this.form.driverId="";
+      this.form.custId="";
+      this.form.shipTo="";
+    },
+    onSubmit() {
+      this.dialogFormVisible = false;
+      debugger;
+      if (this.edit === false) {
+        this.$axios({
+          url: "/api/v1/reservation",
+          method: "post",
+          data: this.form,
+          headers: {
+            "Content-Type": "application/json",
+            Origin: "http://localhost:8080"
+          }
+        })
+          .then(successResponse => {
+            debugger;
+            this.form.resvId="$1";
+            this.form.resvType="";
+            this.form.sourceLocid="";
+            this.form.planDepart="";
+            this.form.destLocid="";
+            this.form.planArr="";
+            this.form.vehicleId="";
+            this.form.driverId="";
+            this.form.custId="";
+            this.form.shipTo="";
+            this.tableData = successResponse.data;
+          })
+          .catch(failResponse => {
+            console.log(failResponse);
+          });
+      } else {
+        this.$axios({
+          url: "/api/v1/tour",
+          method: "put",
+          data: this.form,
+          headers: {
+            "Content-Type": "application/json",
+            Origin: "http://localhost:8080"
+          }
+        })
+          .then(successResponse => {
+            debugger;
+            console.log(successResponse.data);
+            this.form.resvId="$1";
+            this.form.resvType="";
+            this.form.sourceLocid="";
+            this.form.planDepart="";
+            this.form.destLocid="";
+            this.form.planArr="";
+            this.form.vehicleId="";
+            this.form.driverId="";
+            this.form.custId="";
+            this.form.shipTo="";
+            this.tableData = successResponse.data;
+          })
+          .catch(failResponse => {
+            console.log(failResponse);
+          });
+      }
     }
   }
 };
