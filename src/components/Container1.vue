@@ -69,11 +69,11 @@
                   <span>运输计划</span>
                 </template>
                 <el-menu-item-group>
+                  <el-menu-item index="/createSch">创建运输计划</el-menu-item>
+                  <el-menu-item index="/schedule">运输计划列表</el-menu-item>
                   <el-menu-item index="/reservation">车辆预定</el-menu-item>
-                  <el-menu-item index="/schedule">运输计划</el-menu-item>
                   <el-menu-item index="/createtour">创建行程</el-menu-item>
-                  <!-- <el-menu-item index="/resvList">车辆预定清单</el-menu-item> -->
-                  <el-menu-item index="/tourList">行程清单</el-menu-item>
+                  <el-menu-item index="/tourList">行程列表</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <el-submenu index="3">

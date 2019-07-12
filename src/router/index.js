@@ -20,6 +20,7 @@ import Reservation from '@/components/Planning/Reservation'
 import ResvList from '@/components/Planning/ResvList'
 import Schedule from '@/components/Planning/Schedule'
 import TourList from '@/components/Planning/TourList'
+import CreateSch from '@/components/Planning/CreateSch'
 
 //Execution
 import TourDetail from '@/components/Execution/TourDetail'
@@ -71,6 +72,7 @@ export default new Router({
         {path: 'reservation',name:'Reservation', component: Reservation},
         {path: 'resvList',name:'ResvList', component: ResvList},
         {path: 'schedule',name:'Schedule', component: Schedule},
+        {path: 'createSch',name:'CreateSch', component: CreateSch},
         {path: 'tourList',name:'TourList', component: TourList},
         //execution
         {path: 'tourdetail',name:'TourDetail', component: TourDetail},
