@@ -7,14 +7,14 @@
       width="60%"
       label-width="100px"
       label-position="left">
-      <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" class="demo-ruleForm">
+      <el-form ref="ruleForm" :model="form" label-width="100px" class="demo-ruleForm" :inline=true>
             <el-form-item label="预定编号" prop="name" style>
-              <el-col :span="12">
-                <el-input maxlength="10" v-model="form.resvId"></el-input>
-              </el-col>
+              <!-- <el-col :span="12"> -->
+                <el-input maxlength="10" v-model="form.resvId" :disabled="true"></el-input>
+              <!-- </el-col> -->
             </el-form-item>
             <el-form-item label="类型">
-              <el-col :span="18">
+              <!-- <el-col :span="18"> -->
                 <el-select
                   v-model="form.resvType"
                   placeholder="请选择"
@@ -29,7 +29,7 @@
                     <span style="float: right; color: #8492a6; font-size: 13px">{{ item.resvType }}</span>
                   </el-option>
                 </el-select>
-              </el-col>
+              <!-- </el-col> -->
             </el-form-item>
             <el-form-item label="发车地点">
               <el-col :span="18">
@@ -117,16 +117,16 @@
                 <el-option
                   v-for="item in drivers"
                   :key="item.driverId"
-                  :label="item.driverId"
+                  :label="item.name"
                   :value="item.driverId">
                   <span style="float: left">{{ item.name }}</span>
                   <span style="float: right; color: #8492a6; font-size: 13px">{{ item.driverId }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="客户编号" label-width="80px" filterable>
+            <el-form-item label="客户编号" filterable>
               <el-select
-                v-model="header.custId"
+                v-model="form.custId"
                 placeholder="请选择"
                 filterable
                 :default-first-option="true"
@@ -142,9 +142,9 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="送达方" filterable label-width="80px">
+            <el-form-item label="送达方" filterable>
               <el-select
-                v-model="header.shipTo"
+                v-model="form.shipTo"
                 placeholder="请选择"
                 filterable
                 :default-first-option="true"
@@ -196,17 +196,17 @@
           <el-table-column label="类型" width="80">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
-                <p>类型: {{ scope.row.resvId }}</p>
-                <p>描述: {{ scope.row.resvType }}</p>
+                <p>类型: {{ scope.row.resvType }}</p>
+                <p>客户: {{ scope.row.shipTo }}</p>
                 <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">{{ scope.row.resvType }}</el-tag>
+                  <el-tag size="medium">{{ scope.row.resvText }}</el-tag>
                 </div>
               </el-popover>
             </template>
           </el-table-column>
           <el-table-column label="发车地点" width="180">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.sourceLoc.address }}</span>
+              <span style="margin-left: 10px">{{ scope.row.sourceLocAddr }}</span>
             </template>
           </el-table-column>
           <el-table-column label="计划发车时间" width="180">
@@ -217,7 +217,7 @@
 
           <el-table-column label="目的地址" width="180">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.destLoc.address }}</span>
+              <span style="margin-left: 10px">{{ scope.row.destLocAddr }}</span>
             </template>
           </el-table-column>
 
@@ -228,7 +228,6 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button size="mini" type="primary" @click="handleDetail(scope.$index, scope.row)">明细</el-button>
               <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
               <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
@@ -287,6 +286,7 @@ export default {
       resvTypes: [],
       drivers:[],
       vehs: [],
+      resvTypes: [],
       formInline: {
         resvId: "",
         resvType: "",
@@ -308,6 +308,7 @@ export default {
       this.vehs = this.MT_DATA.assets;
       this.customers = this.MT_DATA.customers;
       this.drivers = this.MT_DATA.drivers;
+      this.resvTypes = this.MT_DATA.resvTypes;
     }
 
     this.$axios
@@ -319,20 +320,25 @@ export default {
       .then(response => {
         debugger
         this.tableData = response.data;
-      })
-      .catch(function(error) {
-        alert(error);
-      });
+        for(let i=0; i < this.tableData.length ; i++){
+          for(let loc of this.locations){
+            //source location
+            if(loc.locId===this.tableData[i].sourceLocid){
+               this.tableData[i].sourceLocAddr = loc.address;
+            }
 
-    this.$axios
-      .get("/api/v1/resvType",{
-        params: {
-            resvType: null
+            //destination loc
+            if(loc.locId===this.tableData[i].destLocid){
+               this.tableData[i].destLocAddr = loc.address;
+            }
           }
-      })
-      .then(response => {
-        debugger
-        this.resvTypes = response.data;
+
+          for(let rt of this.resvTypes){
+            if(rt.resvType === this.tableData[i].resvType){
+              this.tableData[i].resvText = rt.text;
+            }
+          }
+        }
       })
       .catch(function(error) {
         alert(error);
@@ -343,24 +349,25 @@ export default {
       debugger;
       return row.createdBy;
     },
-    handleDetail(index, row){
-      debugger
-      // var url = "/TourMain/tourlist";
-      var info = {id:row.tourid,message:"成功"};
-      this.$router.push({name:'TourDetail',params:info})
-      console.log(this.formInline.tourid);
-    },
     handleEdit(index, row) {
       this.edit = true;
       this.dialogFormVisible = true;
-      this.form.tourid = row.tourid;
-      this.form.tourType = row.tourType;
+      this.form.resvId=row.resvId;
+      this.form.resvType=row.resvType;
+      this.form.sourceLocid=row.sourceLocid;
+      this.form.planDepart=row.planDepart;
+      this.form.destLocid=row.destLocid;
+      this.form.planArr=row.planArr;
+      this.form.vehicleId=row.vehicleId;
+      this.form.driverId=row.driverId;
+      this.form.custId=row.custId;
+      this.form.shipTo=row.shipTo;
       debugger;
       console.log(index, row.createdBy);
     },
     handleDelete(index, row) {
       this.$axios({
-        url: "/api/v1/reservation/" + row.tourid,
+        url: "/api/v1/reservation/" + row.resvId,
         method: "delete",
         headers: {
           "Content-Type": "application/json",
@@ -370,11 +377,69 @@ export default {
         .then(successResponse => {
           debugger;
           this.tableData = successResponse.data;
+          for(let i=0; i < this.tableData.length ; i++){
+            for(let loc of this.locations){
+              //source location
+              if(loc.locId===this.tableData[i].sourceLocid){
+                this.tableData[i].sourceLocAddr = loc.address;
+              }
+
+              //destination loc
+              if(loc.locId===this.tableData[i].destLocid){
+                this.tableData[i].destLocAddr = loc.address;
+              }
+            }
+
+            for(let rt of this.resvTypes){
+              if(rt.resvType === this.tableData[i].resvType){
+                this.tableData[i].resvText = rt.text;
+              }
+            }
+          }
         })
         .catch(failResponse => {
           console.log(failResponse);
         });
       console.log(index, row);
+    },
+    setVeh(vehId) {
+      // this.form.vehicleId
+    },
+    setCust(custId) {
+      // for (let c of this.customers) {
+      //   if (c.custId === custId) {
+          this.form.custId = custId;
+          // this.header.soldto = {
+          //   name:c.name,
+          //   address:c.address
+          // };
+      //     break;
+      //   }
+      // }
+    },
+    setShipTo(shipTo) {
+      // for (let c of this.customers) {
+      //   if (c.custId === shipTo) {
+          this.form.shipTo = shipTo;
+          // this.header.shipto = {
+          //   name:c.name,
+          //   address:c.address
+          // };
+          // break;
+      //   }
+      // }
+    },
+    setDriver(driverId){
+      // for (let d of this.drivers) {
+      //   if (d.driverId === driverId) {
+      //     this.header.driver = {
+      //       driverId:d.driverId,
+      //       name:d.name,
+      //       tel:d.tel
+      //     };
+      //     break;
+      //   }
+      // }
     },
     onGet() {
       debugger;
@@ -382,8 +447,8 @@ export default {
       this.$axios
         .get("/api/v1/reservation", {
           params: {
-            resvId: this.formInline.tourid,
-            resvType: this.formInline.tourType
+            resvId: this.formInline.resvId,
+            resvType: this.formInline.resvType
           }
         })
         .then(response => {
@@ -434,13 +499,32 @@ export default {
             this.form.custId="";
             this.form.shipTo="";
             this.tableData = successResponse.data;
+            for(let i=0; i < this.tableData.length ; i++){
+              for(let loc of this.locations){
+                //source location
+                if(loc.locId===this.tableData[i].sourceLocid){
+                  this.tableData[i].sourceLocAddr = loc.address;
+                }
+
+                //destination loc
+                if(loc.locId===this.tableData[i].destLocid){
+                  this.tableData[i].destLocAddr = loc.address;
+                }
+              }
+
+              for(let rt of this.resvTypes){
+                if(rt.resvType === this.tableData[i].resvType){
+                  this.tableData[i].resvText = rt.text;
+                }
+              }
+            }
           })
           .catch(failResponse => {
             console.log(failResponse);
           });
       } else {
         this.$axios({
-          url: "/api/v1/tour",
+          url: "/api/v1/reservation",
           method: "put",
           data: this.form,
           headers: {
@@ -462,6 +546,25 @@ export default {
             this.form.custId="";
             this.form.shipTo="";
             this.tableData = successResponse.data;
+            for(let i=0; i < this.tableData.length ; i++){
+              for(let loc of this.locations){
+                //source location
+                if(loc.locId===this.tableData[i].sourceLocid){
+                  this.tableData[i].sourceLocAddr = loc.address;
+                }
+
+                //destination loc
+                if(loc.locId===this.tableData[i].destLocid){
+                  this.tableData[i].destLocAddr = loc.address;
+                }
+              }
+
+              for(let rt of this.resvTypes){
+                if(rt.resvType === this.tableData[i].resvType){
+                  this.tableData[i].resvText = rt.text;
+                }
+              }
+            }
           })
           .catch(failResponse => {
             console.log(failResponse);

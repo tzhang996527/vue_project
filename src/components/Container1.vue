@@ -70,9 +70,9 @@
                 </template>
                 <el-menu-item-group>
                   <el-menu-item index="/reservation">车辆预定</el-menu-item>
-                  <el-menu-item index="/schedule">行程计划</el-menu-item>
+                  <el-menu-item index="/schedule">运输计划</el-menu-item>
                   <el-menu-item index="/createtour">创建行程</el-menu-item>
-                  <el-menu-item index="/resvList">车辆预定清单</el-menu-item>
+                  <!-- <el-menu-item index="/resvList">车辆预定清单</el-menu-item> -->
                   <el-menu-item index="/tourList">行程清单</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
@@ -208,6 +208,21 @@ export default {
       .then(response => {
         debugger;
         this.MT_DATA.drivers = response.data;
+      })
+      .catch(function(error) {
+        alert(error);
+      });
+
+    //get reservation type
+    this.$axios
+      .get("/api/v1/resvType",{
+        params: {
+            resvType: null
+          }
+      })
+      .then(response => {
+        debugger
+        this.MT_DATA.resvTypes = response.data;
       })
       .catch(function(error) {
         alert(error);

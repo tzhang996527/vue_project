@@ -4,6 +4,7 @@ export default{
     locations:{},
     customers:{},
     drivers:{},
+    resvTypes:{},
     UoMoptions:[{
         value: 'PC',
         label: 'PC'
