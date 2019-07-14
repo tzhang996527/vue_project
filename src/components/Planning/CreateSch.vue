@@ -62,6 +62,14 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-form-item label="运行天数" label-width="100px">
+          <el-col :span="12">
+            <el-input-number
+              v-model="form.days"
+              placeholder="选择时间"
+            ></el-input-number>
+          </el-col>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -122,29 +130,29 @@
               <el-form-item label="发车规则 :">
               </el-form-item>
           </el-form>
-          <el-form ref="ruleForm" :model="form" label-width="100px" class="demo-ruleForm" :inline=true> 
+          <el-form ref="ruleForm" :model="header" label-width="100px" class="demo-ruleForm" :inline=true> 
               <el-form-item label="星期一">
-                <el-switch v-model="form.week.mon"></el-switch>
+                <el-switch v-model="header.mon"></el-switch>
               </el-form-item>
               <el-form-item label="星期二">
-                <el-switch v-model="form.week.tue"></el-switch>
+                <el-switch v-model="header.tue"></el-switch>
               </el-form-item>
               <el-form-item label="星期三">
-                <el-switch v-model="form.week.wed"></el-switch>
+                <el-switch v-model="header.wed"></el-switch>
               </el-form-item>
               <el-form-item label="星期四">
-                <el-switch v-model="form.week.thu"></el-switch>
+                <el-switch v-model="header.thu"></el-switch>
               </el-form-item>
         </el-form>
-        <el-form ref="ruleForm" :model="form" label-width="100px" class="demo-ruleForm" :inline=true>
+        <el-form ref="ruleForm" :model="header" label-width="100px" class="demo-ruleForm" :inline=true>
               <el-form-item label="星期五">
-                <el-switch v-model="form.week.fri"></el-switch>
+                <el-switch v-model="header.fri"></el-switch>
               </el-form-item>
               <el-form-item label="星期六">
-                <el-switch v-model="form.week.sat"></el-switch>
+                <el-switch v-model="header.sat"></el-switch>
               </el-form-item>
               <el-form-item label="星期日">
-                <el-switch v-model="form.week.sun"></el-switch>
+                <el-switch v-model="header.sun"></el-switch>
               </el-form-item>
         </el-form>
         </el-form>
@@ -160,7 +168,7 @@
             <el-tab-pane label="停靠站点" name="tab_stop">
               <el-row>
                 <el-col :span="24">
-                  <el-table :data="header.plannedStopsDetail" style="width: 100%" stripe>
+                  <el-table :data="header.schStops" style="width: 100%" stripe>
                     <el-table-column prop="seq" label="编号" sortable width="80"></el-table-column>
                     <el-table-column prop="address" label="停靠站点" width="180"></el-table-column>
                     <el-table-column prop = "planDepart" label="计划出发时间" width="180" :formatter="formatDate">
@@ -175,7 +183,7 @@
                         <span style="margin-left: 10px">{{ scope.row.planArr }}</span>
                       </template> -->
                     </el-table-column>
-                    <el-table-column label="天数" width="180" :formatter="formatDate">
+                    <el-table-column label="运行天数" width="180">
                       <template slot-scope="scope">
                         <i class="el-icon-time"></i>
                         <span style="margin-left: 10px">{{ scope.row.days }}</span>
@@ -222,20 +230,11 @@ export default {
       UoMoptions:[],
       schTypes:[],
       form: {
-        locId: "",
-        address: "",
-        seq: "",
-        planDepart: "",
-        planArr: "",
-        week:{
-          mon:false,
-          tue:false,
-          wed:false,
-          thu:false,
-          fri:false,
-          sat:false,
-          sun:false
-        }
+        seq:"",
+        locId:"",
+        planDepart:"",
+        planArr:"",
+        days:0
       },
       dialogFormVisible: false,
       dialogFormVisibleCargo:false,
@@ -272,46 +271,20 @@ export default {
       vehs: [],
       activeName: "tab_stop", //default tab
       header: {
-        tourid: "$1",
-        tourType: "",
-        shipTo: "",
-        custId: "",
-        soldto: {
-          name: "",
-          address: ""
-        },
-        shipto: {
-          name: "",
-          address: ""
-        },
-        driver: {
-          driverId: "",
-          name: "",
-          tel: ""
-        },
-        sourceLoc: {
-          locId: ""
-        },
-        destLoc: {
-          locId: ""
-        },
-        plannedStopsDetail: [],
-        tourItem:[],
-        planDepart: "",
-        planArr: "",
-        vehicle: {
-          assetId: "",
-          assetType: "",
-          platenumber: "",
-          make: "",
-          model: "",
-          vin: "",
-          year: "",
-          hardware: "",
-          location: ""
+        schId:"$1",
+        schType:"",
+        startDt:"",
+        endDt:"",
+        mon:false,
+        tue:false,
+        wed:false,
+        thu:false,
+        fri:false,
+        sat:false,
+        sun:false,
+        schStops:[]
         }
       }
-    };
   },
   created() {
     if (this.MT_DATA) {
@@ -322,6 +295,14 @@ export default {
       this.drivers = this.MT_DATA.drivers;
       this.UoMoptions = this.MT_DATA.UoMoptions;
     }
+
+     this.$axios({
+        url: "/api/v1/schType",
+        method: "get"
+      }).then(successResponse => {
+          this.schTypes = successResponse.data;
+          debugger;
+    });
   },
   mounted() {},
   methods: {
@@ -329,21 +310,20 @@ export default {
       debugger;
       let postData = this.header;
       this.$axios({
-        url: "/api/v1/tour",
+        url: "/api/v1/sch",
         method: "post",
         data: postData,
         headers: {
           "Content-Type": "application/json",
           Origin: "http://localhost:8080"
         }
-      })
-        .then(successResponse => {
+      }).then(successResponse => {
           this.$notify({
             title: "成功",
-            message: "行程 " + successResponse.data + " 创建成功",
+            message: "计划 " + successResponse.data + " 创建成功",
             type: "success"
           });
-          this.header.tourid = successResponse.data;
+          this.header.schId = successResponse.data;
           debugger;
         })
         .catch(failResponse => {
@@ -355,13 +335,17 @@ export default {
       this.dialogFormVisible = true;
       this.form.locId = "";
       this.form.address = "";
-      this.form.seq = this.header.plannedStopsDetail.length + 1;
+      this.form.days = 0;
+      this.form.seq = this.header.schStops.length + 1;
       this.form.planDepart = "";
       this.form.planArr = "";
       this.form.status = "P";
     },
     formatDate: function(row, column, cellValue, index) {
-      return cellValue.toLocaleTimeString();
+      debugger
+      if(cellValue !== "" && cellValue !== null){
+        return cellValue.toLocaleTimeString();
+      }
     },
     onSubmit() {
       this.dialogFormVisible = false;
@@ -377,18 +361,20 @@ export default {
         a.planDepart = this.form.planDepart;
         a.planArr = this.form.planArr;
         a.status = this.form.status;
-        this.header.plannedStopsDetail.push(a);
+        a.days = this.form.days;
+        this.header.schStops.push(a);
       } else {
         //edit
         let idx = this.form.seq - 1;
         let locId = this.form.locId;
-        this.header.plannedStopsDetail[idx].locid = this.form.locId;
+        this.header.schStops[idx].locid = this.form.locId;
         let location = this.locations.find(location => {
           return location.locId == locId;
         });
-        this.header.plannedStopsDetail[idx].address = location.address;
-        this.header.plannedStopsDetail[idx].planDepart = this.form.planDepart;
-        this.header.plannedStopsDetail[idx].planArr = this.form.planArr;
+        this.header.schStops[idx].address = location.address;
+        this.header.schStops[idx].planDepart = this.form.planDepart;
+        this.header.schStops[idx].planArr = this.form.planArr;
+        this.header.schStops[idx].days = this.form.days;
       }
     },
     handleEdit(index, row) {
@@ -400,14 +386,10 @@ export default {
       this.form.planDepart = row.planDepart;
       this.form.planArr = row.planArr;
       this.form.status = row.status;
+      this.form.days = row.days;
     },
     handleDelete(index, row) {
-      let idx = row.seq - 1;
-      this.header.plannedStopsDetail.splice(idx, 1);
-    },
-    handleDeleteCargo(index, row) {
-      let idx = row.seq - 1;
-      this.header.tourItem.splice(idx, 1);
+      this.header.schStops.splice(index, 1);
     },
     handleClick(tab, event) {
       console.log(tab, event);

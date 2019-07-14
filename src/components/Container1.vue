@@ -217,6 +217,21 @@ export default {
       .catch(function(error) {
         alert(error);
       });
+
+    //get schedule type
+    this.$axios
+      .get("/api/v1/schType",{
+        params: {
+            resvType: null
+          }
+      })
+      .then(response => {
+        debugger
+        this.MT_DATA.schTypes = response.data;
+      })
+      .catch(function(error) {
+        alert(error);
+      });
   },
   computed: {
     // 默认激活的路由, 用来激活菜单选中状态

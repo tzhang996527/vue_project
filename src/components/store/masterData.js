@@ -5,6 +5,7 @@ export default{
     customers:{},
     drivers:{},
     resvTypes:{},
+    schTypes:{},
     UoMoptions:[{
         value: 'PC',
         label: 'PC'
