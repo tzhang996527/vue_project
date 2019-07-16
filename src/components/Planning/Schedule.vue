@@ -104,7 +104,7 @@
               <span style="margin-left: 10px">{{ scope.row.schId }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="计划类型" width="80">
+          <el-table-column label="计划类型" width="100">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
                 <p>类型: {{ scope.row.schType }}</p>
@@ -114,9 +114,51 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column prop = "startDt" label="计划开始时间" width="180" >
+          <el-table-column prop = "startDt" label="计划开始时间" width="120" :formatter="formatDate">
           </el-table-column>
-          <el-table-column prop = "endDt" label="计划结束时间" width="180">
+          <el-table-column prop = "endDt" label="计划结束时间" width="120" :formatter="formatDate">
+          </el-table-column>
+          <el-table-column label="星期一" width="70">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.mon" active-value="true" inactive-value="false" disabled>
+              </el-switch>
+             </template>
+          </el-table-column>
+          <el-table-column label="星期二" width="70">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.tue" active-value="true" inactive-value="false" disabled>
+              </el-switch>
+             </template>
+          </el-table-column>
+          <el-table-column label="星期三" width="70">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.wed" active-value="true" inactive-value="false" disabled>
+              </el-switch>
+             </template>
+          </el-table-column>
+          <el-table-column label="星期四" width="70">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.thu" active-value="true" inactive-value="false" disabled>
+              </el-switch>
+             </template>
+          </el-table-column>
+          <el-table-column label="星期五" width="70">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.fri" active-value="true" inactive-value="false" disabled>
+              </el-switch>
+             </template>
+          </el-table-column>
+          <el-table-column label="星期六" width="70">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.sat" active-value="true" inactive-value="false" disabled>
+              </el-switch>
+             </template>
+          </el-table-column>
+          <el-table-column label="星期日" width="70">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.sun" active-value="true" inactive-value="false" disabled>
+              </el-switch>
+             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -203,7 +245,7 @@ export default {
         this.tableData = response.data;
         for(let i=0; i < this.tableData.length ; i++){
           for(let rt of this.schTypes){
-            if(rt.resvType === this.tableData[i].schType){
+            if(rt.schType === this.tableData[i].schType){
               this.tableData[i].schText = rt.text;
             }
           }
@@ -217,7 +259,8 @@ export default {
     formatDate: function(row, column, cellValue, index) {
       debugger
       if(cellValue !== "" && cellValue !== null){
-        return cellValue.toLocaleTimeString();
+        let a = new Date(cellValue)
+        return a.toLocaleDateString();
       }
     },
     handleGen(index,row){
