@@ -97,9 +97,9 @@
     <el-row>
       <el-col :span="24">
         <el-table :data="tableData" style="width: 100%" stripe>
-          <el-table-column type="index" width="50"></el-table-column>
+          <el-table-column type="index" width="20"></el-table-column>
 
-          <el-table-column label="计划编号" sortable width="120">
+          <el-table-column label="计划编号" sortable width="110">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.schId }}</span>
             </template>
@@ -114,9 +114,9 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column prop = "startDt" label="计划开始时间" width="120" :formatter="formatDate">
+          <el-table-column prop = "startDt" label="计划开始时间" width="110" :formatter="formatDate">
           </el-table-column>
-          <el-table-column prop = "endDt" label="计划结束时间" width="120" :formatter="formatDate">
+          <el-table-column prop = "endDt" label="计划结束时间" width="110" :formatter="formatDate">
           </el-table-column>
           <el-table-column label="星期一" width="70">
             <template slot-scope="scope">
