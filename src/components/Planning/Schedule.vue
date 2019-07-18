@@ -264,7 +264,27 @@ export default {
       }
     },
     handleGen(index,row){
-
+      this.$axios({
+        url: "/api/v1/schGenTour",
+        method: "post",
+        data: {
+          schId: row.schId
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "http://localhost:8080"
+        }
+      }).then(successResponse => {
+          this.$notify({
+            title: "成功",
+            message: " 创建成功" + successResponse.data.length + "个行程 ",
+            type: "success"
+          });
+          // this.header.tourid = successResponse.data;
+          debugger;
+      }).catch(failResponse => {
+          console.log(failResponse);
+      });
     },
     handleEdit(index, row) {
       this.edit = true;
