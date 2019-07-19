@@ -16,6 +16,7 @@ import TourType from '@/components/MasterData/TourType'
 
 //planning
 import CreateTour from '@/components/Planning/CreateTour'
+import EditTour from '@/components/Planning/EditTour'
 import Reservation from '@/components/Planning/Reservation'
 import ResvList from '@/components/Planning/ResvList'
 import Schedule from '@/components/Planning/Schedule'
@@ -69,6 +70,7 @@ export default new Router({
         {path: 'tourType',name:'TourType', component: TourType},
         //planning
         {path: 'createTour',name:'CreateTour', component: CreateTour},
+        {path: 'editTour',name:'EditTour', component: EditTour},
         {path: 'reservation',name:'Reservation', component: Reservation},
         {path: 'resvList',name:'ResvList', component: ResvList},
         {path: 'schedule',name:'Schedule', component: Schedule},

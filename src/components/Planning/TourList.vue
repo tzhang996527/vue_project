@@ -174,12 +174,8 @@ export default {
       console.log(this.formInline.tourid);
     },
     handleEdit(index, row) {
-      this.edit = true;
-      this.dialogFormVisible = true;
-      this.form.tourid = row.tourid;
-      this.form.tourType = row.tourType;
-      debugger;
-      console.log(index, row.createdBy);
+      var info = {id:row.tourid,message:"成功"};
+      this.$router.push({name:'EditTour',params:info})
     },
     handleDelete(index, row) {
       this.$axios({
