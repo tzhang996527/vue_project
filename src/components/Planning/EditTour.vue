@@ -66,6 +66,160 @@ span {
 </style>
 <template>
   <div>
+    <el-dialog
+      title="添加站点"
+      :visible.sync="dialogFormVisible"
+      width="50%"
+      label-width="100px"
+      label-position="left">
+      <el-form ref="ruleForm" :model="form" label-width="80px" class="demo-ruleForm">
+        <el-row>
+          <el-col :span="18">
+            <el-form-item label="顺序" style>
+              <el-col :span="10">
+                <el-input maxlength="10" v-model="form.seq" :disabled="true"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="站点">
+              <el-col :span="18">
+                <el-select
+                  v-model="form.locId"
+                  placeholder="请选择"
+                  filterable
+                  :default-first-option="true">
+                  <el-option
+                    v-for="item in locations"
+                    :key="item.locId"
+                    :label="item.address"
+                    :value="item.locId">
+                    <span style="float: left">{{ item.address }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.locId }}</span>
+                  </el-option>
+                </el-select>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="计划到达时间">
+              <el-col :span="12">
+                <el-date-picker
+                  v-model="form.planArr"
+                  type="datetime"
+                  placeholder="选择日期时间"
+                  align="right"
+                  :picker-options="pickerOptions"
+                ></el-date-picker>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="计划出发时间">
+              <el-col :span="12">
+                <el-date-picker
+                  v-model="form.planDepart"
+                  type="datetime"
+                  placeholder="选择日期时间"
+                  align="right"
+                  :picker-options="pickerOptions"
+                ></el-date-picker>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="onSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- Cargo Form -->
+    <el-dialog
+      title="添加货物"
+      :visible.sync="dialogFormVisibleCargo"
+      width="50%"
+      label-width="100px"
+      label-position="left">
+      <el-form ref="ruleForm" :model="cargoform" label-width="100px" class="demo-ruleForm">
+        <el-row>
+          <el-col :span="18">
+            <el-form-item label="顺序" style>
+              <el-col :span="10">
+                <el-input maxlength="10" v-model="cargoform.seq" :disabled="true"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="集装箱编号">
+                <el-input maxlength="20" v-model="cargoform.container"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="数量">
+                <el-input maxlength="10" v-model="cargoform.quan"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="单位">
+              <el-select v-model="cargoform.quanUom" placeholder="请选择">
+                <el-option
+                  v-for="item in UoMoptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="货物">
+                <el-input maxlength="10" v-model="cargoform.commodity"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="目的地">
+              <el-col :span="18">
+                <el-select
+                  v-model="cargoform.locId"
+                  placeholder="请选择"
+                  filterable
+                  :default-first-option="true">
+                  <el-option
+                    v-for="item in locations"
+                    :key="item.locId"
+                    :label="item.address"
+                    :value="item.locId">
+                    <span style="float: left">{{ item.address }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.locId }}</span>
+                  </el-option>
+                </el-select>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleCargo = false">取 消</el-button>
+        <el-button type="primary" @click="onSubmitCargo">确 定</el-button>
+      </div>
+    </el-dialog>
     <el-row>
       <el-col :span="18">
           <el-form ref="form" :model="header" label-width="80px" :inline=true>
@@ -117,6 +271,7 @@ span {
                   type="datetime"
                   placeholder="选择日期时间"
                   align="right"
+                  :picker-options="pickerOptions"
                 ></el-date-picker>
               </el-col>
             </el-form-item>
@@ -145,6 +300,7 @@ span {
                   type="datetime"
                   placeholder="选择日期时间"
                   align="right"
+                  :picker-options="pickerOptions"
                 ></el-date-picker>
               </el-col>
             </el-form-item>
@@ -260,9 +416,22 @@ span {
                   <!-- inline = true的时候el-form-item需要加label-width -->
                   <el-form ref="form" :model="header" :inline="false" label-width="80px">
                     <el-form-item label="客户编号" label-width="80px" filterable>
-                      <el-col :span="8">
-                      <el-input v-model="header.soldto.custId" :disabled="true"></el-input>
-                      </el-col>
+                       <el-select
+                        v-model="header.custId"
+                        placeholder="请选择"
+                        filterable
+                        :default-first-option="true"
+                        @change="setCust">
+                        <el-option
+                          v-for="item in customers"
+                          :key="item.custId"
+                          :label="item.name"
+                          :value="item.custId">
+                          <span style="float: left">{{ item.address }}</span>
+                          <span
+                            style="float: right; color: #8492a6; font-size: 13px">{{ item.custId }}</span>
+                        </el-option>
+                      </el-select>
                     </el-form-item>
                   </el-form>
                   <el-form ref="form" :model="header" :inline="true" label-width="80px">
@@ -275,9 +444,22 @@ span {
                   </el-form>
                   <el-form ref="form" :model="header" :inline="false" label-width="80px">
                     <el-form-item label="送达方" filterable label-width="80px">
-                      <el-col :span="8">
-                      <el-input v-model="header.shipto.custId" :disabled="true"></el-input>
-                      </el-col>
+                      <el-select
+                        v-model="header.shipTo"
+                        placeholder="请选择"
+                        filterable
+                        :default-first-option="true"
+                        @change="setShipTo">
+                        <el-option
+                          v-for="item in customers"
+                          :key="item.custId"
+                          :label="item.name"
+                          :value="item.custId">
+                          <span style="float: left">{{ item.name }}</span>
+                          <span
+                            style="float: right; color: #8492a6; font-size: 13px">{{ item.custId }}</span>
+                        </el-option>
+                      </el-select>
                     </el-form-item>
                   </el-form>
                   <el-form ref="form" :model="header" :inline="true" label-width="80px">
@@ -299,18 +481,42 @@ span {
                     <el-table-column prop="container" label="集装箱编号"></el-table-column>
                     <el-table-column prop="commodity" label="货物"></el-table-column>
                     <el-table-column prop="quan" label="数量"></el-table-column>
-                    <el-table-column prop="location" label="目的地"></el-table-column>
+                    <el-table-column prop="address" label="目的地"></el-table-column>
                     <el-table-column prop="status" label="运输状态"></el-table-column>
+                      <el-table-column label="操作">
+                      <template slot-scope="scope">
+                        <el-button size="mini" @click="handleEditCargo(scope.$index, scope.row)">编辑</el-button>
+                        <el-button
+                          size="mini"
+                          type="danger"
+                          @click="handleDeleteCargo(scope.$index, scope.row)">删除</el-button>
+                      </template>
+                    </el-table-column>
                   </el-table>
+                  <div style="margin-top: 20px">
+                    <el-button @click="addCargo" size="mini" type="primary">添加</el-button>
+                  </div>
                 </el-col>
               </el-row>
             </el-tab-pane>
             <el-tab-pane label="驾驶员信息" name="tab_drv">
               <el-form ref="form" :model="header" :inline="false" label-width="80px">
                  <el-form-item label="驾驶员编号" label-width="100px">
-                   <el-col :span="8">
-                    <el-input v-model="header.driver.driverId" :disabled="true"></el-input>
-                   </el-col>
+                   <el-select
+                        v-model="header.driver.driverId"
+                        placeholder="请选择"
+                        filterable
+                        :default-first-option="true"
+                        @change="setDriver">
+                        <el-option
+                          v-for="item in drivers"
+                          :key="item.driverId"
+                          :label="item.driverId"
+                          :value="item.driverId">
+                          <span style="float: left">{{ item.name }}</span>
+                          <span style="float: right; color: #8492a6; font-size: 13px">{{ item.driverId }}</span>
+                        </el-option>
+                      </el-select>
                 </el-form-item>
               </el-form>
               <el-form ref="form" :model="header" :inline="true" label-width="100px">
@@ -391,6 +597,34 @@ export default {
         locId:"",
         address:""
       },
+      dialogFormVisible: false,
+      dialogFormVisibleCargo:false,
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "今天",
+            onClick(picker) {
+              picker.$emit("pick", new Date());
+            }
+          },
+          {
+            text: "明天",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() + 3600 * 1000 * 24);
+              picker.$emit("pick", date);
+            }
+          },
+          {
+            text: "一周后",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", date);
+            }
+          }
+        ]
+      },
       map: null,
       /* 当前位置 */
       thisPosition: {
@@ -415,6 +649,7 @@ export default {
       tourTypes: [],
       drivers:[],
       vehs: [],
+      plannedStopsDetail:[],
       header: {
         tourid: "",
         exeStatus:"",
@@ -458,7 +693,6 @@ export default {
     };
   },
   created() {
-    debugger
     if (this.MT_DATA) {
       this.locations = this.MT_DATA.locations;
       this.tourTypes = this.MT_DATA.tourTypes;
@@ -487,7 +721,6 @@ export default {
     this.trafficLayer.hide();
     /* 添加工具条 */
     this.addTool();
-    debugger;
 
     this.getTour();
     //计划路线
@@ -499,7 +732,7 @@ export default {
       let postData = this.header;
       this.$axios({
         url: "/api/v1/tour",
-        method: "post",
+        method: "put",
         data: postData,
         headers: {
           "Content-Type": "application/json",
@@ -509,10 +742,9 @@ export default {
         .then(successResponse => {
           this.$notify({
             title: "成功",
-            message: "行程 " + successResponse.data + " 创建成功",
+            message: "行程 " + successResponse.data + " 更新成功",
             type: "success"
           });
-          this.header.tourid = successResponse.data;
           debugger;
         })
         .catch(failResponse => {
@@ -736,8 +968,6 @@ export default {
     },
 
     drawLine() {
-      debugger;
-
       var path = this.header.actualStops.map(function(value, index) {
         var oGeo = [value.lng, value.lat];
         return oGeo;
@@ -767,7 +997,6 @@ export default {
       // this.map.setFitView([polyline]);
     },
     truckRoute() {
-      debugger;
       this.map.clearMap();
       //planned stop
       this.setPlannedStop();
@@ -784,7 +1013,6 @@ export default {
       });
 
       var path = [];
-      debugger
       path.push({ lnglat: [this.thisPosition.lng, this.thisPosition.lat] }); //途径
       path.push({ lnglat: [this.destLoc.lng, this.destLoc.lat] }); //终点
 
@@ -809,7 +1037,6 @@ export default {
       this.drawLine();
     },
     formatDate: function(row, column, cellValue, index) {
-      debugger;
       if (cellValue !== "" && cellValue !== null){
 
         if(typeof(cellValue) == "string"){
@@ -825,7 +1052,68 @@ export default {
       return cellValue === "P" ? "计划中" : "运行中";
     },
     onSubmit() {
-      console.log("submit!");
+      this.dialogFormVisible = false;
+      if (!this.edit) {
+        let a = {};
+        a.locid = this.form.locId;
+        let location = this.locations.find(location => {
+          return location.locId == a.locid;
+        });
+        // a.address = location.address;
+        a.seq = this.form.seq;
+        a.planDepart = this.form.planDepart;
+        a.planArr = this.form.planArr;
+        a.status = this.form.status;
+        a.location = {};
+        a.location.address = location.address;
+        this.header.plannedStopsDetail.push(a);
+      } else {
+        //edit
+        let idx = this.form.seq - 1;
+        let locId = this.form.locId;
+        this.header.plannedStopsDetail[idx].locid = this.form.locId;
+        let location = this.locations.find(location => {
+          return location.locId == locId;
+        });
+        // this.header.plannedStopsDetail[idx].address = location.address;
+        this.header.plannedStopsDetail[idx].location.address = location.address;
+        this.header.plannedStopsDetail[idx].planDepart = this.form.planDepart;
+        this.header.plannedStopsDetail[idx].planArr = this.form.planArr;
+      }
+    },
+    onSubmitCargo() {
+      debugger
+      this.dialogFormVisibleCargo = false;
+      if (!this.edit) {
+        let a = {};
+        a.locid = this.cargoform.locId;
+        let location = this.locations.find(location => {
+          return location.locId == a.locid;
+        });
+        a.address   = location.address;
+        a.seq       = this.cargoform.seq;
+        a.container = this.cargoform.container;
+        a.quan      = this.cargoform.quan;
+        a.quanUom   = this.cargoform.quanUom;
+        a.commodity = this.cargoform.commodity;
+        a.location  = this.cargoform.locId;
+        a.status    = "计划中";
+        this.header.tourItem.push(a);
+      } else {
+        //edit
+        let idx   = this.cargoform.seq - 1;
+        let locId = this.cargoform.locId;
+        this.header.tourItem[idx].locid = this.cargoform.locId;
+        let location = this.locations.find(location => {
+          return location.locId == locId;
+        });
+        this.header.tourItem[idx].address = location.address;
+        this.header.tourItem[idx].container = this.cargoform.container;
+        this.header.tourItem[idx].quan = this.cargoform.quan;
+        this.header.tourItem[idx].quanUom = this.cargoform.quanUom;
+        this.header.tourItem[idx].commodity = this.cargoform.commodity;
+        this.header.tourItem[idx].location = this.cargoform.locId;
+      }
     },
     handleClick(tab, event) {
       // console.log(this.$parent.$data.formInline.tourid);
@@ -862,7 +1150,6 @@ export default {
             
           })
           .catch(failResponse => {
-            debugger;
             console.log(failResponse);
           });
     },
@@ -875,6 +1162,7 @@ export default {
         })
         .then(response => {
           this.header = response.data;
+          debugger
           //set source location
           this.srcLoc = {
             lng: this.header.sourceLoc.lng,
@@ -895,7 +1183,6 @@ export default {
             lat: len > 0 ? response.data.actualStops[len - 1].lat : response.data.sourceLoc.lat
           };
 
-          debugger;
           this.truckRoute();
         })
         .catch(function(error) {

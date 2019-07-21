@@ -87,10 +87,10 @@
               <span style="margin-left: 10px">{{ scope.row.sourceLoc.address }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="发车时间" width="180">
-            <template slot-scope="scope">
+          <el-table-column prop = "planDepart" label="计划出发时间" width="180" :formatter="formatDate">
+            <!-- <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.planDepart }}</span>
-            </template>
+            </template> -->
           </el-table-column>
 
           <el-table-column label="目的地址" width="180">
@@ -162,9 +162,16 @@ export default {
       });
   },
   methods: {
-    formatDate: function(row, column) {
-      debugger;
-      return row.createdBy;
+    formatDate: function(row, column, cellValue, index) {
+      if (cellValue !== "" && cellValue !== null){
+
+        if(typeof(cellValue) == "string"){
+          var d = new Date(cellValue);
+          return d.toLocaleString()
+        }else{
+          return cellValue.toLocaleString();
+        }
+      }
     },
     handleDetail(index, row){
       debugger
@@ -178,6 +185,9 @@ export default {
       this.$router.push({name:'EditTour',params:info})
     },
     handleDelete(index, row) {
+
+      let tourid = row.tourid;
+
       this.$axios({
         url: "/api/v1/tour/" + row.tourid,
         method: "delete",
@@ -185,10 +195,15 @@ export default {
           "Content-Type": "application/json",
           Origin: "http://localhost:8080"
         }
-      })
-        .then(successResponse => {
+      }).then(successResponse => {
           debugger;
           this.tableData = successResponse.data;
+
+          this.$notify({
+            title: "成功",
+            message: "行程 " + tourid + " 删除成功",
+            type: "success"
+          });
         })
         .catch(failResponse => {
           console.log(failResponse);
