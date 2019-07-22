@@ -259,20 +259,6 @@ export default {
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
-      // switch(key){
-      //     case '1-1':
-      //       this.$router.push('/page1');
-      //       //this.breadcrumbItems  = ['导航一']
-      //       break;
-      //     case '2-1':
-      //       this.$router.push('/page2')
-      //       this.breadcrumbItems  = ['导航二']
-      //       break;
-      //     case '3':
-      //       this.$router.push('/Page3')
-      //       this.breadcrumbItems  = ['导航三']
-      //       break;
-      //   }
     },
     back(){
       this.$router.go(-1);//返回上一层
