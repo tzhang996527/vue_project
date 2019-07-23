@@ -584,11 +584,28 @@ export default {
     if (this.MT_DATA) {
       this.locations = this.MT_DATA.locations;
       this.tourTypes = this.MT_DATA.tourTypes;
-      this.vehs = this.MT_DATA.assets;
+      // this.vehs = this.MT_DATA.assets;
       this.customers = this.MT_DATA.customers;
       this.drivers = this.MT_DATA.drivers;
       this.UoMoptions = this.MT_DATA.UoMoptions;
     }
+
+    //get all vehicles
+    this.$axios
+      .get("/api/v1/assetDetail", {
+        params: {
+          assetId: null,
+          assetTpye: null,
+          status:"1"
+        }
+      })
+      .then(response => {
+        debugger;
+        this.vehs = response.data;
+      })
+      .catch(function(error) {
+        alert(error);
+      });
   },
   mounted() {},
   methods: {

@@ -6,8 +6,7 @@
       :visible.sync="dialogFormVisible"
       width="60%"
       label-width="100px"
-      label-position="left"
-    >
+      label-position="left">
       <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" class="demo-ruleForm">
         <el-row>
           <el-col :span="12">
@@ -76,7 +75,20 @@
           <el-col :span="12">
             <el-form-item label="所在地" style>
               <el-col :span="12">
-                <el-input maxlength="10" v-model="form.location"></el-input>
+                <el-select
+                  v-model="form.location"
+                  placeholder="请选择"
+                  filterable
+                  :default-first-option="true">
+                  <el-option
+                    v-for="item in locations"
+                    :key="item.locId"
+                    :label="item.address"
+                    :value="item.locId">
+                    <span style="float: left">{{ item.address }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.locId }}</span>
+                  </el-option>
+                </el-select>
               </el-col>
             </el-form-item>
           </el-col>
@@ -118,10 +130,10 @@
     </el-row>
     <el-row>
       <el-col :span="24">
-        <el-table :data="tableData" style="width: 100%" stripe border>
+        <el-table :data="tableData" style="width: 100%" stripe>
           <el-table-column type="index" width="50" fixed></el-table-column>
 
-          <el-table-column prop="assetId" label="车辆编号" sortable width="180" fixed></el-table-column>
+          <el-table-column prop="assetId" label="车辆编号" sortable width="100" fixed></el-table-column>
           <el-table-column label="车型" width="180">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.assetType }}</span>
@@ -134,6 +146,8 @@
             </template>
           </el-table-column>
 
+          <el-table-column prop="status" label="车辆状态" width="180" :formatter="formatStatus">
+          </el-table-column>
           <el-table-column label="制造商" width="180">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.make }}</span>
@@ -169,11 +183,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="创建日期" width="180" :formatter="formatDate">
-            <template slot-scope="scope">
-              <i class="el-icon-time"></i>
-              <span style="margin-left: 10px">{{ scope.row.createdOn }}</span>
-            </template>
+          <el-table-column prop = "createdOn" label="创建日期" width="180" :formatter="formatDate">
           </el-table-column>
           <el-table-column label="操作" fixed="right" width="180">
             <template slot-scope="scope">
@@ -219,13 +229,18 @@ export default {
       dialogTableVisible: false,
       dialogFormVisible: false,
       tableData: [],
-      tableAssetType: []
+      tableAssetType: [],
+      locations:[]
     };
   },
   //用于数据初始化
   created: function() {
+    if (this.MT_DATA) {
+      this.locations = this.MT_DATA.locations;
+    }
+
     this.$axios
-      .get("/api/v1/asset", {
+      .get("/api/v1/assetDetail", {
         params: {
           assetType: null,
           assetId: null
@@ -254,9 +269,26 @@ export default {
       });
   },
   methods: {
-    formatDate: function(row, column) {
-      debugger;
-      return row.createdBy;
+    formatDate: function(row, column, cellValue, index) {
+      if (cellValue !== "" && cellValue !== null){
+
+        if(typeof(cellValue) == "string"){
+          var d = new Date(cellValue);
+          return d.toLocaleString()
+        }else{
+          return cellValue.toLocaleString();
+        }
+      }
+    },
+    formatStatus:function(row, column, cellValue, index){
+      debugger
+      if(cellValue === "1"){
+        return "可用";
+      }else if(cellValue === "2"){
+        return "使用中";
+      }else{
+        return "未知";
+      }
     },
     handleEdit(index, row) {
       this.edit = true;
