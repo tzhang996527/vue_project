@@ -85,8 +85,8 @@ export default {
                     return ret
                     }],
                     headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Origin':'http://localhost:8080'
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                    // 'Origin':'http://localhost:8080'
                     }
                 }).then(successResponse => {
                     // this.responseResult = JSON.stringify(successResponse.data)

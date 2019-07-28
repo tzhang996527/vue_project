@@ -19,7 +19,7 @@ Vue.use(ElementUI)
 // 将API方法绑定到全局
 axios.defaults.baseURL = process.env.API
 Vue.prototype.$axios = axios
-Vue.prototype.BASE_URL = zconst.BASE_URL
+Vue.prototype.BASE_URL = zconst.BASE_URL //测试用
 Vue.prototype.MT_DATA = masterData
 
 Vue.prototype.$echarts = echarts //将$echarts添加到Vue实例中
