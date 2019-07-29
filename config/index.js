@@ -52,7 +52,9 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    // assetsPublicPath: '/',
+    assetsPublicPath: './', //加入这一句
+    // assetsPublicPath：资源的根目录。这个是通过http服务器运行的url路径。因为webapp和static中间还有层dist,所以要用'./'
 
     /**
      * Source Maps

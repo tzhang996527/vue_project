@@ -861,9 +861,9 @@ export default {
 
       var img = "";
       if(this.header.exeStatus==="01"){
-        img = "/static/lorrygreen.png"
+        img = "./static/lorrygreen.png"
       }else{
-        img = "/static/truckyellow.png";
+        img = "./static/truckyellow.png";
       }
       var vehIcon = new AMap.Icon({
         size: new AMap.Size(128, 128),
