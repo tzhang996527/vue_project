@@ -197,6 +197,10 @@
   </div>
 </template>
 <script>
+//asset.vue要访问util.js需要返回上级目录components的上级目录src,然后再访问/components/store/util
+// import {formatDate} from '../../components/store/util'
+import {Dateformat} from '../store/util' //访问上级目录(components)下的store/util
+
 export default {
   data() {
     return {
@@ -270,15 +274,7 @@ export default {
   },
   methods: {
     formatDate: function(row, column, cellValue, index) {
-      if (cellValue !== "" && cellValue !== null){
-
-        if(typeof(cellValue) == "string"){
-          var d = new Date(cellValue);
-          return d.toLocaleString()
-        }else{
-          return cellValue.toLocaleString();
-        }
-      }
+      return Dateformat(row, column, cellValue, index);
     },
     formatStatus:function(row, column, cellValue, index){
       debugger
