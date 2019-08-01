@@ -6,6 +6,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 import zconst from './components/store/const'
 import masterData from './components/store/masterData'
+import utils from './utils/util'
 //echarts
 import echarts from 'echarts'
 
@@ -21,6 +22,7 @@ axios.defaults.baseURL = process.env.API
 Vue.prototype.$axios = axios
 Vue.prototype.BASE_URL = zconst.BASE_URL //测试用
 Vue.prototype.MT_DATA = masterData
+Vue.prototype.util = utils
 
 Vue.prototype.$echarts = echarts //将$echarts添加到Vue实例中
 Vue.config.productionTip = false

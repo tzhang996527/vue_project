@@ -87,7 +87,7 @@
               <span style="margin-left: 10px">{{ scope.row.sourceLoc.address }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop = "planDepart" label="计划出发时间" width="180" :formatter="formatDate">
+          <el-table-column prop = "planDepart" label="计划出发时间" width="180" :formatter="this.util.dateFormat">
             <!-- <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.planDepart }}</span>
             </template> -->
@@ -162,17 +162,6 @@ export default {
       });
   },
   methods: {
-    formatDate: function(row, column, cellValue, index) {
-      if (cellValue !== "" && cellValue !== null){
-
-        if(typeof(cellValue) == "string"){
-          var d = new Date(cellValue);
-          return d.toLocaleString()
-        }else{
-          return cellValue.toLocaleString();
-        }
-      }
-    },
     handleDetail(index, row){
       debugger
       // var url = "/TourMain/tourlist";

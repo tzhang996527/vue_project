@@ -114,9 +114,9 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column prop = "startDt" label="计划开始时间" width="110" :formatter="formatDate">
+          <el-table-column prop = "startDt" label="计划开始时间" width="110" :formatter="this.util.dateFormat">
           </el-table-column>
-          <el-table-column prop = "endDt" label="计划结束时间" width="110" :formatter="formatDate">
+          <el-table-column prop = "endDt" label="计划结束时间" width="110" :formatter="this.util.dateFormat">
           </el-table-column>
           <el-table-column label="星期一" width="70">
             <template slot-scope="scope">

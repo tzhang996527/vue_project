@@ -216,37 +216,37 @@ span {
                     <el-table-column prop="seq" label="编号" sortable width="80"></el-table-column>
                     <el-table-column prop="location.address" label="停靠站点"></el-table-column>
                     <el-table-column prop="status" label="行程状态"></el-table-column>
-                    <el-table-column label="计划出发时间" width="180" :formatter="formatDate">
+                    <el-table-column label="计划出发时间" width="180" :formatter="this.util.dateFormat">
                       <template slot-scope="scope">
                         <i class="el-icon-time"></i>
                         <span style="margin-left: 10px">{{ scope.row.planDepart }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="计划到达时间" width="180" :formatter="formatDate">
+                    <el-table-column label="计划到达时间" width="180" :formatter="this.util.dateFormat">
                       <template slot-scope="scope">
                         <i class="el-icon-time"></i>
                         <span style="margin-left: 10px">{{ scope.row.planArr }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="实际出发时间" width="180" :formatter="formatDate">
+                    <el-table-column label="实际出发时间" width="180" :formatter="this.util.dateFormat">
                       <template slot-scope="scope">
                         <i class="el-icon-time"></i>
                         <span style="margin-left: 10px">{{ scope.row.actDepart }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="实际到达时间" width="180" :formatter="formatDate">
+                    <el-table-column label="实际到达时间" width="180" :formatter="this.util.dateFormat">
                       <template slot-scope="scope">
                         <i class="el-icon-time"></i>
                         <span style="margin-left: 10px">{{ scope.row.actArr }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="预计出发时间" width="180" :formatter="formatDate">
+                    <el-table-column label="预计出发时间" width="180" :formatter="this.util.dateFormat">
                       <template slot-scope="scope">
                         <i class="el-icon-time"></i>
                         <span style="margin-left: 10px">{{ scope.row.estDepart }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="预计到达时间" width="180" :formatter="formatDate">
+                    <el-table-column label="预计到达时间" width="180" :formatter="this.util.dateFormat">
                       <template slot-scope="scope">
                         <i class="el-icon-time"></i>
                         <span style="margin-left: 10px">{{ scope.row.estArr }}</span>
@@ -332,11 +332,7 @@ span {
                     <el-table-column prop="eventCode" label="事件编号"></el-table-column>
                     <el-table-column prop="location" label="发生位置"></el-table-column>
                     <el-table-column prop="status" label="时间状态"></el-table-column>
-                    <el-table-column label="事件发生时间" width="180" :formatter="formatDate">
-                      <template slot-scope="scope">
-                        <i class="el-icon-time"></i>
-                        <span style="margin-left: 10px">{{ scope.row.createdOn }}</span>
-                      </template>
+                    <el-table-column prop = "createdOn" label="事件发生时间" width="180" :formatter="this.util.dateFormat">
                     </el-table-column>
                   </el-table>
                 </el-col>
@@ -349,7 +345,7 @@ span {
                     <el-table-column prop="seq" label="编号" sortable width="80"></el-table-column>
                     <el-table-column prop="text" label="消息通知"></el-table-column>
                     <el-table-column prop="createdBy" label="创建人"></el-table-column>
-                    <el-table-column label="创建时间" width="180" :formatter="formatDate">
+                    <el-table-column label="创建时间" width="180" :formatter="this.util.dateFormat">
                       <template slot-scope="scope">
                         <i class="el-icon-time"></i>
                         <span style="margin-left: 10px">{{ scope.row.createdOn }}</span>
@@ -654,10 +650,6 @@ export default {
 
       //绘制已行驶路径
       this.drawLine();
-    },
-    formatDate: function(row, column) {
-      debugger;
-      // return row.createdBy;
     },
     onSubmit() {
       console.log("submit!");

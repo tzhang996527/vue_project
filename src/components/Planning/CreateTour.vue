@@ -319,13 +319,13 @@
                     <el-table-column prop="seq" label="编号" sortable width="80"></el-table-column>
                     <el-table-column prop="address" label="停靠站点"></el-table-column>
                     <el-table-column prop="status" label="行程状态" :formatter="formatStatus"></el-table-column>
-                    <el-table-column prop = "planDepart" label="计划出发时间" width="180" :formatter="formatDate">
+                    <el-table-column prop = "planDepart" label="计划出发时间" width="180" :formatter="this.util.dateFormat">
                       <!-- <template slot-scope="scope">
                         <i class="el-icon-time"></i>
                         <span style="margin-left: 10px">{{ scope.row.planDepart }}</span>
                       </template> -->
                     </el-table-column>
-                    <el-table-column prop = "planArr" label="计划到达时间" width="180" :formatter="formatDate">
+                    <el-table-column prop = "planArr" label="计划到达时间" width="180" :formatter="this.util.dateFormat">
                       <!-- <template slot-scope="scope">
                         <i class="el-icon-time"></i>
                         <span style="margin-left: 10px">{{ scope.row.planArr }}</span>
@@ -709,13 +709,6 @@ export default {
           break;
         }
       }
-    },
-    formatDate: function(row, column, cellValue, index) {
-      debugger;
-      if (cellValue !== ""){
-        return cellValue.toLocaleString();
-      }
-      // return cellValue.toLocaleTimeString();
     },
     formatStatus: function(row, column, cellValue, index){
       return cellValue === "P" ? "计划中" : "运行中";

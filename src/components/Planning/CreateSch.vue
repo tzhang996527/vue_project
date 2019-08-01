@@ -171,17 +171,9 @@
                   <el-table :data="header.schStops" style="width: 100%" stripe>
                     <el-table-column prop="seq" label="编号" sortable width="80"></el-table-column>
                     <el-table-column prop="address" label="停靠站点" width="180"></el-table-column>
-                    <el-table-column prop = "planDepart" label="计划出发时间" width="180" :formatter="formatDate">
-                        <!-- <template slot-scope="scope">
-                        <i class="el-icon-time"></i>
-                        <span style="margin-left: 10px">{{ scope.row.planDepart }}</span>
-                      </template> -->
+                    <el-table-column prop = "planDepart" label="计划出发时间" width="180" :formatter="this.util.dateFormat">
                     </el-table-column>
-                    <el-table-column prop = "planArr" label="计划到达时间" width="180" :formatter="formatDate">
-                      <!-- <template slot-scope="scope">
-                        <i class="el-icon-time"></i>
-                        <span style="margin-left: 10px">{{ scope.row.planArr }}</span>
-                      </template> -->
+                    <el-table-column prop = "planArr" label="计划到达时间" width="180" :formatter="this.util.dateFormat">
                     </el-table-column>
                     <el-table-column label="运行天数" width="180">
                       <template slot-scope="scope">
@@ -340,12 +332,6 @@ export default {
       this.form.planDepart = "";
       this.form.planArr = "";
       this.form.status = "P";
-    },
-    formatDate: function(row, column, cellValue, index) {
-      debugger
-      if(cellValue !== "" && cellValue !== null){
-        return cellValue.toLocaleTimeString();
-      }
     },
     onSubmit() {
       this.dialogFormVisible = false;

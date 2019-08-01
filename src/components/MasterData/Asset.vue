@@ -183,7 +183,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop = "createdOn" label="创建日期" width="180" :formatter="formatDate">
+          <el-table-column prop = "createdOn" label="创建日期" width="180" :formatter="this.util.dateFormat">
           </el-table-column>
           <el-table-column label="操作" fixed="right" width="180">
             <template slot-scope="scope">
@@ -273,9 +273,6 @@ export default {
       });
   },
   methods: {
-    formatDate: function(row, column, cellValue, index) {
-      return Dateformat(row, column, cellValue, index);
-    },
     formatStatus:function(row, column, cellValue, index){
       debugger
       if(cellValue === "1"){

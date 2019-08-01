@@ -85,11 +85,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="创建日期" width="180" :formatter="formatDate">
-            <template slot-scope="scope">
-              <i class="el-icon-time"></i>
-              <span style="margin-left: 10px">{{ scope.row.createdOn }}</span>
-            </template>
+          <el-table-column prop = "createdOn" label="创建日期" width="180" :formatter="this.util.dateFormat">
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -147,10 +143,6 @@ export default {
       });
   },
   methods: {
-    formatDate: function(row, column) {
-      debugger;
-      return row.createdBy;
-    },
     handleEdit(index, row) {
       this.edit = true;
       this.dialogFormVisible = true;

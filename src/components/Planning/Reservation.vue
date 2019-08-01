@@ -209,10 +209,7 @@
               <span style="margin-left: 10px">{{ scope.row.sourceLocAddr }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="计划发车时间" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.planDepart }}</span>
-            </template>
+          <el-table-column prop="planDepart" label="计划发车时间" width="180" :formatter="this.util.dateFormat">
           </el-table-column>
 
           <el-table-column label="目的地址" width="180">
@@ -221,10 +218,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="计划到达时间" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.planArr }}</span>
-            </template>
+          <el-table-column prop="planArr" label="计划到达时间" width="180" :formatter="this.util.dateFormat">
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -345,10 +339,6 @@ export default {
       });
   },
   methods: {
-    formatDate: function(row, column) {
-      debugger;
-      return row.createdBy;
-    },
     handleEdit(index, row) {
       this.edit = true;
       this.dialogFormVisible = true;

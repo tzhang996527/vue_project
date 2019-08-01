@@ -10,11 +10,28 @@
  *比如我们在这里定义了日期的格式，供后面组件统一改变
  */
 //Date对象转化为yyyy-MM-dd格式
-export function dateFormat(dateObj){
-  var year = dateObj.getFullYear();
-  var month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
-  var day = ("0" + dateObj.getDate()).slice(-2);
-  return year + "-" + month + "-" + day;
+// function dateFormat(dateObj){
+//   var year = dateObj.getFullYear();
+//   var month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
+//   var day = ("0" + dateObj.getDate()).slice(-2);
+//   return year + "-" + month + "-" + day;
+// }
+
+function dateFormat(row, column, cellValue, index) {
+  if (cellValue !== "" && cellValue !== null){
+
+    if(typeof(cellValue) == "string"){
+      var d = new Date(cellValue);
+      return d.toLocaleString()
+    }else{
+      return cellValue.toLocaleString();
+    }
+  }
+  // return cellValue.toLocaleTimeString();
+}
+
+export default {
+  dateFormat
 }
 
 // createInfoWindow(title, content) {
