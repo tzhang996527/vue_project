@@ -274,7 +274,6 @@ export default {
   },
   methods: {
     formatStatus:function(row, column, cellValue, index){
-      debugger
       if(cellValue === "1"){
         return "可用";
       }else if(cellValue === "2"){
@@ -341,7 +340,6 @@ export default {
       // var axios = require("axios");
       // axios.defaults.baseURL = process.env.API;
       this.dialogFormVisible = false;
-      debugger;
       if (this.edit === false) {
         this.$axios({
           url: "/api/v1/asset",
@@ -369,6 +367,7 @@ export default {
             this.tableData = successResponse.data;
           })
           .catch(failResponse => {
+            debugger;
             console.log(failResponse);
           });
       } else {

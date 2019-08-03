@@ -69,35 +69,22 @@ export default {
                 var axios = require('axios')
                 axios.defaults.baseURL = process.env.API
 
+                var auth = "Basic " + new Buffer(this.ruleForm2.username + ":" + this.ruleForm2.password).toString("base64");
+
                 axios({
-                    url: '/login',
-                    method: 'post',
-                    data: {
-                    username: this.ruleForm2.username,
-                    password: this.ruleForm2.password
-                    },
-                    transformRequest: [function (data) {
-                    // Do whatever you want to transform the data
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret
-                    }],
-                    headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                    // 'Origin':'http://localhost:8080'
+                    url: '/',
+                    method: 'get',
+                    headers : {
+                        "Authorization" : auth
                     }
                 }).then(successResponse => {
-                    // this.responseResult = JSON.stringify(successResponse.data)
-                    // // if (successResponse.data.code === 200) {
-                    // this.$router.replace({path: '/index'})
-                    // }
+                    debugger;
                         this.logining = false;
                         sessionStorage.setItem('user', this.ruleForm2.username);
                         this.$router.push({path: '/dashboard'});
                     })
                     .catch(failResponse => {
+                        debugger;
                         this.logining = false;
                         this.$alert('username or password wrong!', 'info', {
                             confirmButtonText: 'ok'
