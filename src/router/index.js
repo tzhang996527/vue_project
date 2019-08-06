@@ -7,6 +7,8 @@ import Container1 from '@/components/Container1'
 //master data
 import AssetType from '@/components/MasterData/AssetType'
 import Asset from '@/components/MasterData/Asset'
+import AssetCreate from '@/components/MasterData/AssetCreate'
+import AssetEdit from '@/components/MasterData/AssetEdit'
 import Location from '@/components/MasterData/Location'
 import Customer from '@/components/MasterData/Customer'
 import Driver from '@/components/MasterData/Driver'
@@ -60,6 +62,8 @@ export default new Router({
       children: [
         //Master Data
         {path: 'AssetType',name:'AssetType', component: AssetType},
+        {path: 'AssetCreate',name:'AssetCreate', component: AssetCreate},
+        {path: 'AssetEdit',name:'AssetEdit', component: AssetEdit},
         {path: 'Asset',name:'Asset', component: Asset},
         {path: 'Location',name:'Location', component: Location},
         {path: 'tourType',name:'TourType', component: TourType},

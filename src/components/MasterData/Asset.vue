@@ -7,7 +7,7 @@
       width="60%"
       label-width="100px"
       label-position="left">
-      <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" class="demo-ruleForm">
+      <el-form ref="ruleForm" :model="form" label-width="80px" class="demo-ruleForm">
         <el-row>
           <el-col :span="12">
             <el-form-item label="车辆编号" prop="name" style>
@@ -217,15 +217,6 @@ export default {
         hardware: "",
         location: ""
       },
-      rules: {
-        name: [
-          { required: true, message: "请输入车辆类型", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
-        ],
-        region: [
-          { required: true, message: "请选择活动区域", trigger: "change" }
-        ]
-      },
       formInline: {
         assetType: "",
         assetId: ""
@@ -283,10 +274,12 @@ export default {
       }
     },
     handleEdit(index, row) {
-      this.edit = true;
-      this.dialogFormVisible = true;
-      this.form = row;
-      debugger;
+      // this.edit = true;
+      // this.dialogFormVisible = true;
+      // this.form = row;
+      // debugger;
+      var info = {id:row.assetId,message:"成功"};
+      this.$router.push({name:'AssetEdit',params:info})
     },
     handleDelete(index, row) {
       this.$axios({
@@ -324,17 +317,18 @@ export default {
         });
     },
     onCreate() {
-      this.dialogFormVisible = true;
-      this.edit = false;
-      this.form.assetId = "";
-      this.form.assetType = "";
-      this.form.platenumber = "";
-      this.form.make = "";
-      this.form.model = "";
-      this.form.vin = "";
-      this.form.year = "";
-      this.form.hardware = "";
-      this.form.location = "";
+      this.$router.push({name:'AssetCreate'});
+      // this.dialogFormVisible = true;
+      // this.edit = false;
+      // this.form.assetId = "";
+      // this.form.assetType = "";
+      // this.form.platenumber = "";
+      // this.form.make = "";
+      // this.form.model = "";
+      // this.form.vin = "";
+      // this.form.year = "";
+      // this.form.hardware = "";
+      // this.form.location = "";
     },
     onSubmit() {
       // var axios = require("axios");
